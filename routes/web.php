@@ -19,8 +19,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->name('register');
     Route::post('/register', [AdminAuthController::class, 'register']);
 
+    // TAMBAHKAN .withoutMiddleware('guest:admin') DI SINI
     Route::get('/login', [AdminAuthController::class, 'showLogin'])
-        ->name('login')->middleware('guest:admin');
+        ->name('login')
+        ->middleware('guest:admin')
+        ->withoutMiddleware('guest:admin'); // ← BARIS INI MEMPERBAIKI SEMUA
+
     Route::post('/login', [AdminAuthController::class, 'login']);
 
     // === PROTECTED ROUTES (hanya admin login) ===
