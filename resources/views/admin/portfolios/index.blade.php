@@ -19,9 +19,7 @@
             danger: '#f72585',
             success: '#4cc9f0',
           },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-          }
+          fontFamily: { sans: ['Inter', 'sans-serif'] }
         }
       }
     }
@@ -47,7 +45,7 @@
     <!-- Sidebar -->
     <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-2xl transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
       <div class="flex items-center justify-between p-6 border-b dark:border-gray-700">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">AdminPro</h1>
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ARTDEVATA</h1>
         <button id="close-sidebar" class="lg:hidden text-gray-500 hover:text-primary">
           <i class="fas fa-times text-xl"></i>
         </button>
@@ -60,13 +58,10 @@
           <i class="fas fa-box mr-3"></i> Layanan
         </a>
         <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover sidebar-active rounded-l-full mr-3">
-          <i class="fas fa-images mr-3"></i> Portfolio
+          <i class="fas fa-chart-line mr-3"></i> Portfolio
         </a>
         <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-blog mr-3"></i> Blog
-        </a>
-        <a href="{{ route('admin.register') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-user-plus mr-3"></i> Tambah Admin
+          <i class="fas fa-cog mr-3"></i> Blog
         </a>
       </nav>
     </div>
@@ -124,7 +119,7 @@
           </div>
         @endif
 
-        <!-- TOMBOL TAMBAH – PERSIS SEPERTI LAYANAN -->
+        <!-- TOMBOL TAMBAH -->
         <div class="mb-6">
           <a href="{{ route('admin.portfolios.create') }}" class="btn bg-gradient-to-r from-primary to-secondary text-white hover:shadow-lg">
             <i class="fas fa-plus mr-2"></i> Tambah Portfolio
@@ -143,6 +138,7 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Judul</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Deskripsi</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Gambar</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tautan</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Aksi</th>
                 </tr>
               </thead>
@@ -162,18 +158,32 @@
                       <span class="text-xs text-gray-400">Tidak ada gambar</span>
                     @endif
                   </td>
+                  <td class="px-6 py-4">
+                    @if($portfolio->link)
+                      <a href="{{ $portfolio->link }}" target="_blank" 
+                         class="text-primary hover:text-secondary font-medium text-sm flex items-center gap-1">
+                        <i class="fas fa-external-link-alt"></i> Lihat Proyek
+                      </a>
+                    @else
+                      <span class="text-xs text-gray-400">Tidak ada tautan</span>
+                    @endif
+                  </td>
                   <td class="px-6 py-4 text-sm font-medium space-x-3">
-                    <a href="{{ route('admin.portfolios.edit', $portfolio) }}" class="text-primary hover:underline">Edit</a>
+                    <a href="{{ route('admin.portfolios.edit', $portfolio) }}" class="text-primary hover:underline flex items-center gap-1">
+                      <i class="fas fa-edit"></i> Edit
+                    </a>
                     <form action="{{ route('admin.portfolios.destroy', $portfolio) }}" method="POST" class="inline">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="text-danger hover:underline" onclick="return confirm('Yakin ingin menghapus portfolio ini?')">Hapus</button>
+                      @csrf @method('DELETE')
+                      <button type="submit" class="text-danger hover:underline flex items-center gap-1" 
+                              onclick="return confirm('Yakin ingin menghapus portfolio ini?')">
+                        <i class="fas fa-trash"></i> Hapus
+                      </button>
                     </form>
                   </td>
                 </tr>
                 @empty
                 <tr>
-                  <td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                  <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                     Belum ada portfolio. <a href="{{ route('admin.portfolios.create') }}" class="text-primary underline">Tambah sekarang</a>
                   </td>
                 </tr>
@@ -221,13 +231,11 @@
       localStorage.setItem('darkMode', isDark);
     });
 
-    // Load dark mode preference
     if (localStorage.getItem('darkMode') === 'true' || 
         (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       html.classList.add('dark');
       darkToggle.innerHTML = '<i class="fas fa-sun text-lg"></i>';
     }
   </script>
-
 </body>
 </html>

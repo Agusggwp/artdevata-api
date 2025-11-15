@@ -49,18 +49,16 @@
     <!-- Sidebar -->
     <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-2xl transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
       <div class="flex items-center justify-between p-6 border-b dark:border-gray-700">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">AdminPro</h1>
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ARTDEVATA</h1>
         <button id="close-sidebar" class="lg:hidden text-gray-500 hover:text-primary">
           <i class="fas fa-times text-xl"></i>
         </button>
       </div>
       <nav class="mt-6">
-        <a href="#" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover sidebar-active rounded-l-full mr-3">
+       <a href="{{ route('admin.panel') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
         </a>
-        <a href="" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-users mr-3"></i> Pengguna
-        </a>
+      
         <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-box mr-3"></i> Layanan
         </a>
@@ -70,9 +68,7 @@
         <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-cog mr-3"></i> Blog
         </a>
-        <a href="{{ route('admin.register') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-user-plus mr-3"></i> Chat
-        </a>
+       
       </nav>
     </div>
 
@@ -122,65 +118,137 @@
       <main class="flex-1 overflow-y-auto p-4 lg:p-8">
 
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
-          <div class="bg-gradient-to-r from-primary to-secondary p-6 rounded-2xl text-white card-hover">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm opacity-90">Total Admin</p>
-                <p class="text-3xl font-bold mt-1">{{ \App\Models\Admin::count() }}</p>
-                <p class="text-xs mt-2 opacity-80">Semua akses panel ini</p>
-              </div>
-              <i class="fas fa-users text-4xl opacity-50"></i>
-            </div>
-          </div>
-          <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-6 rounded-2xl text-white card-hover">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm opacity-90">Status</p>
-                <p class="text-3xl font-bold mt-1">Aktif</p>
-              </div>
-              <i class="fas fa-check-circle text-4xl opacity-50"></i>
-            </div>
-          </div>
-          <div class="bg-gradient-to-r from-orange-500 to-red-600 p-6 rounded-2xl text-white card-hover">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm opacity-90">Login Terakhir</p>
-                <p class="text-3xl font-bold mt-1">{{ now()->format('H:i') }}</p>
-              </div>
-              <i class="fas fa-clock text-4xl opacity-50"></i>
-            </div>
-          </div>
-          <div class="bg-gradient-to-r from-purple-500 to-pink-600 p-6 rounded-2xl text-white card-hover">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm opacity-90">Laravel</p>
-                <p class="text-3xl font-bold mt-1">{{ app()->version() }}</p>
-              </div>
-              <i class="fas fa-code text-4xl opacity-50"></i>
-            </div>
-          </div>
-        </div>
+        <!-- Stats Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+
+  <!-- 1. Total Blog -->
+  <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 rounded-2xl text-white card-hover">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm opacity-90">Total Blog</p>
+        <p class="text-3xl font-bold mt-1">{{ \App\Models\Blog::count() }}</p>
+        <p class="text-xs mt-2 opacity-80">Artikel dipublikasikan</p>
+      </div>
+      <i class="fas fa-blog text-4xl opacity-50"></i>
+    </div>
+  </div>
+
+  <!-- 2. Total Service -->
+  <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-6 rounded-2xl text-white card-hover">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm opacity-90">Total Layanan</p>
+        <p class="text-3xl font-bold mt-1">{{ \App\Models\Service::count() }}</p>
+        <p class="text-xs mt-2 opacity-80">Layanan tersedia</p>
+      </div>
+      <i class="fas fa-box-open text-4xl opacity-50"></i>
+    </div>
+  </div>
+
+  <!-- 3. Total Portfolio -->
+  <div class="bg-gradient-to-r from-orange-500 to-red-600 p-6 rounded-2xl text-white card-hover">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm opacity-90">Total Portfolio</p>
+        <p class="text-3xl font-bold mt-1">{{ \App\Models\Portfolio::count() }}</p>
+        <p class="text-xs mt-2 opacity-80">Proyek selesai</p>
+      </div>
+      <i class="fas fa-briefcase text-4xl opacity-50"></i>
+    </div>
+  </div>
+
+  <!-- 4. Laravel Version -->
+  <div class="bg-gradient-to-r from-purple-500 to-pink-600 p-6 rounded-2xl text-white card-hover">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-sm opacity-90">Laravel</p>
+        <p class="text-3xl font-bold mt-1">{{ app()->version() }}</p>
+        <p class="text-xs mt-2 opacity-80">Framework aktif</p>
+      </div>
+      <i class="fas fa-code text-4xl opacity-50"></i>
+    </div>
+  </div>
+
+  <!-- CARD: Buka Web Invoice -->
+<div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-6 rounded-2xl text-white card-hover cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-105"
+     onclick="window.open('https://invoice.artdevata.net/', '_blank')">
+  <div class="flex items-center justify-center h-full">
+    <div class="text-center">
+      <i class="fas fa-file-invoice-dollar text-5xl mb-3 opacity-80"></i>
+      <p class="text-lg font-bold">Web Invoice</p>
+      <p class="text-xs opacity-80 mt-1 flex items-center justify-center gap-1">
+        <i class="fas fa-external-link-alt"></i> Buka Sekarang
+      </p>
+    </div>
+  </div>
+</div>
+
+</div>
 
         <!-- Chart + Activity -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div class="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <h3 class="text-lg font-semibold mb-4">Aktivitas Login (7 Hari)</h3>
-            <canvas id="trafficChart" height="100"></canvas>
-          </div>
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-            <h3 class="text-lg font-semibold mb-4">Admin Terbaru</h3>
-            <div class="space-y-4 text-sm">
-              @foreach(\App\Models\Admin::latest()->take(3)->get() as $admin)
-              <div class="flex items-center space-x-3">
-                <div class="w-2 h-2 bg-success rounded-full"></div>
-                <p><strong>{{ $admin->name }}</strong></p>
-                <span class="text-gray-500 text-xs">{{ $admin->created_at->diffForHumans() }}</span>
-              </div>
-              @endforeach
-            </div>
-          </div>
-        </div>
+    <!-- Aktivitas Konten + Konten Terbaru -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+
+  <!-- 1. Grafik Aktivitas Konten (7 Hari Terakhir) -->
+  <div class="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl card-hover border border-gray-200 dark:border-gray-700">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-gray-800 dark:text-white">Aktivitas Konten (7 Hari)</h3>
+      <div class="flex space-x-2">
+        <span class="flex items-center text-xs">
+          <i class="fas fa-circle text-blue-500 mr-1"></i> Blog
+        </span>
+        <span class="flex items-center text-xs">
+          <i class="fas fa-circle text-green-500 mr-1"></i> Layanan
+        </span>
+        <span class="flex items-center text-xs">
+          <i class="fas fa-circle text-orange-500 mr-1"></i> Portfolio
+        </span>
+      </div>
+    </div>
+    <canvas id="contentChart" class="h-64"></canvas>
+  </div>
+
+  <!-- 2. Konten Terbaru (3 Item) -->
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl card-hover border border-gray-200 dark:border-gray-700">
+    <h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-white flex items-center">
+      <i class="fas fa-sparkles text-yellow-500 mr-2"></i> Konten Terbaru
+    </h3>
+    <div class="space-y-4">
+
+      @php
+        $latest = collect()
+          ->merge(\App\Models\Blog::latest()->take(1)->get()->map(fn($i) => ['type' => 'Blog', 'item' => $i, 'color' => 'blue']))
+          ->merge(\App\Models\Service::latest()->take(1)->get()->map(fn($i) => ['type' => 'Layanan', 'item' => $i, 'color' => 'green']))
+          ->merge(\App\Models\Portfolio::latest()->take(1)->get()->map(fn($i) => ['type' => 'Portfolio', 'item' => $i, 'color' => 'orange']))
+          ->sortByDesc(fn($i) => $i['item']->created_at)
+          ->take(3);
+      @endphp
+
+      @foreach($latest as $entry)
+        @php
+          $item = $entry['item'];
+          $color = $entry['color'];
+          $icon = $entry['type'] === 'Blog' ? 'fa-blog' : ($entry['type'] === 'Layanan' ? 'fa-box' : 'fa-briefcase');
+          $bgColor = $color === 'blue' ? 'bg-blue-100 text-blue-700' : 
+                    ($color === 'green' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700');
+        @endphp
+       <div class="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all">
+  <div class="w-10 h-10 rounded-full {{ $bgColor }} flex items-center justify-center flex-shrink-0">
+    <i class="fas {{ $icon }} text-sm"></i>
+  </div>
+  <div class="flex-1 min-w-0">
+    <p class="font-medium text-sm truncate">{{ $item->title }}</p>
+    <p class="text-xs text-gray-500 dark:text-gray-400">
+      <span class="font-medium">{{ $entry['type'] }}</span> • {{ $item->created_at->diffForHumans() }}
+    </p>
+  </div>
+</div>
+      @endforeach
+
+    </div>
+  </div>
+
+</div>
 
         <!-- Table Admin -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">

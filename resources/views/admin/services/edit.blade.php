@@ -28,19 +28,31 @@
   <div class="flex h-screen overflow-hidden">
 
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-2xl transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+  <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-2xl transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
       <div class="flex items-center justify-between p-6 border-b dark:border-gray-700">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">AdminPro</h1>
-        <button id="close-sidebar" class="lg:hidden text-gray-500 hover:text-primary"><i class="fas fa-times text-xl"></i></button>
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ARTDEVATA</h1>
+        <button id="close-sidebar" class="lg:hidden text-gray-500 hover:text-primary">
+          <i class="fas fa-times text-xl"></i>
+        </button>
       </div>
       <nav class="mt-6">
-        <a href="{{ route('admin.panel') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-full mr-3"><i class="fas fa-tachometer-alt mr-3"></i> Dashboard</a>
-        <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 bg-gradient-to-r from-primary to-secondary text-white rounded-l-full mr-3"><i class="fas fa-box mr-3"></i> Layanan</a>
-        <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-full mr-3"><i class="fas fa-images mr-3"></i> Portfolio</a>
-        <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-full mr-3"><i class="fas fa-blog mr-3"></i> Blog</a>
-        <a href="{{ route('admin.register') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-l-full mr-3"><i class="fas fa-user-plus mr-3"></i> Tambah Admin</a>
+       <a href="{{ route('admin.panel') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
+          <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+        </a>
+      
+        <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
+          <i class="fas fa-box mr-3"></i> Layanan
+        </a>
+        <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
+          <i class="fas fa-chart-line mr-3"></i> Portfolio
+        </a>
+        <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
+          <i class="fas fa-cog mr-3"></i> Blog
+        </a>
+       
       </nav>
     </div>
+
 
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
 

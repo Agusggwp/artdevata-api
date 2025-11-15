@@ -25,9 +25,11 @@ class AdminPortfolioController extends Controller
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'link'        => 'nullable|url|max:255', // TAMBAHAN VALIDASI TAUTAN
         ]);
 
-        $data = $request->only(['title', 'description']);
+        $data = $request->only(['title', 'description', 'link']); // TAMBAH 'link'
+
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('portfolios', 'public');
         }
@@ -50,9 +52,11 @@ class AdminPortfolioController extends Controller
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'link'        => 'nullable|url|max:255', // TAMBAHAN VALIDASI
         ]);
 
-        $data = $request->only(['title', 'description']);
+        $data = $request->only(['title', 'description', 'link']); // TAMBAH 'link'
+
         if ($request->hasFile('image')) {
             if ($portfolio->image) {
                 Storage::disk('public')->delete($portfolio->image);
