@@ -13,25 +13,50 @@ class Portfolio extends Model
         'title',
         'description',
         'image',
-        'link' // ← TAMBAHAN TAUTAN
+        'link',
+
+        // FIELD BARU
+        'category',
+        'client',
+        'date',
+        'duration',
+        'challenge',
+        'solution',
+
+        // JSON FIELDS
+        'results',
+        'technologies',
+        'images',
     ];
 
     /**
-     * Akses link dengan aman
+     * Cast JSON fields to array automatically
+     */
+    protected $casts = [
+        'results' => 'array',
+        'technologies' => 'array',
+        'images' => 'array',
+    ];
+
+    /**
+     * Accessor untuk link (tetap aman)
      */
     public function getLinkAttribute($value)
     {
-        return $value ? $value : '#';
+        return $value ?: '#';
     }
 
     /**
-     * Format link untuk tampilan
+     * Untuk menampilkan link dengan format rapi
      */
     public function linkLabel()
     {
         if (!$this->link || $this->link === '#') {
             return 'Tidak ada tautan';
         }
-        return strlen($this->link) > 40 ? substr($this->link, 0, 40) . '...' : $this->link;
+
+        return strlen($this->link) > 40
+            ? substr($this->link, 0, 40) . '...'
+            : $this->link;
     }
 }

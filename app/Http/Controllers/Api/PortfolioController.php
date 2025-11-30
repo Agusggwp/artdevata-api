@@ -9,18 +9,39 @@ class PortfolioController extends Controller
 {
     /**
      * GET /api/portfolios
-     * → Semua portfolio + link
+     * Semua portfolio
      */
     public function index()
     {
-        $portfolios = Portfolio::select('id', 'title', 'description', 'image', 'link')
-                               ->get();
+        $portfolios = Portfolio::latest()->get()->map(function ($item) {
 
-        // Format image & link agar full URL
-        $portfolios = $portfolios->map(function ($item) {
-            $item->image = $item->image ? asset('storage/' . $item->image) : null;
-            $item->link = $item->link ?: null;
-            return $item;
+            // Format main image
+            $mainImage = $item->image ? asset('storage/' . $item->image) : null;
+
+            // Format gallery images
+            $gallery = [];
+            if (is_array($item->images)) {
+                foreach ($item->images as $img) {
+                    $gallery[] = asset('storage/' . $img);
+                }
+            }
+
+            return [
+                'id'           => $item->id,
+                'title'        => $item->title,
+                'description'  => $item->description,
+                'image'        => $mainImage,
+                'link'         => $item->link,
+                'category'     => $item->category,
+                'client'       => $item->client,
+                'date'         => $item->date,
+                'duration'     => $item->duration,
+                'challenge'    => $item->challenge,
+                'solution'     => $item->solution,
+                'results'      => $item->results ?? [],
+                'technologies' => $item->technologies ?? [],
+                'images'       => $gallery,
+            ];
         });
 
         return response()->json($portfolios);
@@ -28,16 +49,39 @@ class PortfolioController extends Controller
 
     /**
      * GET /api/portfolios/{id}
-     * → Satu portfolio + link
+     * Detail portfolio
      */
     public function show($id)
     {
-        $portfolio = Portfolio::select('id', 'title', 'description', 'image', 'link')
-                              ->findOrFail($id);
+        $item = Portfolio::findOrFail($id);
 
-        // Format image & link
-        $portfolio->image = $portfolio->image ? asset('storage/' . $portfolio->image) : null;
-        $portfolio->link = $portfolio->link ?: null;
+        // Format main image
+        $mainImage = $item->image ? asset('storage/' . $item->image) : null;
+
+        // Format gallery images
+        $gallery = [];
+        if (is_array($item->images)) {
+            foreach ($item->images as $img) {
+                $gallery[] = asset('storage/' . $img);
+            }
+        }
+
+        $portfolio = [
+            'id'           => $item->id,
+            'title'        => $item->title,
+            'description'  => $item->description,
+            'image'        => $mainImage,
+            'link'         => $item->link,
+            'category'     => $item->category,
+            'client'       => $item->client,
+            'date'         => $item->date,
+            'duration'     => $item->duration,
+            'challenge'    => $item->challenge,
+            'solution'     => $item->solution,
+            'results'      => $item->results ?? [],
+            'technologies' => $item->technologies ?? [],
+            'images'       => $gallery,
+        ];
 
         return response()->json($portfolio);
     }

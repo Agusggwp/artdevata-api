@@ -48,7 +48,7 @@
         <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-box mr-3"></i> Layanan
         </a>
-        <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover sidebar-active rounded-l-full mr-3">
+        <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-active rounded-l-full mr-3">
           <i class="fas fa-chart-line mr-3"></i> Portfolio
         </a>
         <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
@@ -82,7 +82,7 @@
       </header>
 
       <main class="flex-1 overflow-y-auto p-4 lg:p-8">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg max-w-3xl mx-auto">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg max-w-4xl mx-auto">
 
           <!-- SUCCESS MESSAGE -->
           @if(session('success'))
@@ -98,81 +98,120 @@
             <!-- Judul -->
             <div class="mb-5">
               <label class="block text-sm font-medium mb-2">Judul Portfolio</label>
-              <input 
-                type="text" 
-                name="title" 
-                value="{{ old('title') }}" 
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 @error('title') border-red-500 @enderror" 
-                required
-                placeholder="Contoh: Website E-Commerce"
-              >
-              @error('title')
-                <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                  <i class="fas fa-info-circle"></i> {{ $message }}
-                </span>
-              @enderror
+              <input type="text" name="title" value="{{ old('title') }}" required placeholder="Website E-Commerce"
+                class="w-full px-4 py-3 border rounded-lg @error('title') border-red-500 @enderror">
+              @error('title')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
             </div>
 
             <!-- Deskripsi -->
             <div class="mb-5">
               <label class="block text-sm font-medium mb-2">Deskripsi</label>
-              <textarea 
-                name="description" 
-                rows="6" 
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 @error('description') border-red-500 @enderror" 
-                required
-                placeholder="Jelaskan proyek ini..."
-              >{{ old('description') }}</textarea>
-              @error('description')
-                <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                  <i class="fas fa-info-circle"></i> {{ $message }}
-                </span>
-              @enderror
+              <textarea name="description" rows="6" required placeholder="Jelaskan proyek ini..."
+                class="w-full px-4 py-3 border rounded-lg @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
+              @error('description')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
             </div>
 
-            <!-- Tautan Proyek -->
+            <!-- Kategori -->
             <div class="mb-5">
-              <label class="block text-sm font-medium mb-2 flex items-center gap-2">
-                <i class="fas fa-link text-primary"></i> Tautan Proyek (opsional)
-              </label>
-              <input 
-                type="url" 
-                name="link" 
-                value="{{ old('link') }}" 
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 @error('link') border-red-500 @enderror" 
-                placeholder="https://github.com/nama/proyek"
-              >
-              <p class="text-xs text-gray-500 mt-1">Contoh: https://contoh.com</p>
-              @error('link')
-                <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                  <i class="fas fa-info-circle"></i> {{ $message }}
-                </span>
-              @enderror
+              <label class="block text-sm font-medium mb-2">Kategori (opsional)</label>
+              <input type="text" name="category" value="{{ old('category') }}" placeholder="Web, Mobile, Branding..."
+                class="w-full px-4 py-3 border rounded-lg @error('category') border-red-500 @enderror">
+              @error('category')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
             </div>
 
-            <!-- Gambar -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium mb-2">Gambar Portfolio</label>
-              <input 
-                type="file" 
-                name="image" 
-                accept="image/*" 
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-secondary @error('image') border-red-500 @enderror"
-              >
-              @error('image')
-                <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                  <i class="fas fa-info-circle"></i> {{ $message }}
-                </span>
-              @enderror
-              <p class="text-xs text-gray-500 mt-2">Maksimal 2MB. Format: JPG, PNG, GIF.</p>
+            <!-- Client -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Client (opsional)</label>
+              <input type="text" name="client" value="{{ old('client') }}" placeholder="Nama Client"
+                class="w-full px-4 py-3 border rounded-lg @error('client') border-red-500 @enderror">
+              @error('client')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Tanggal -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Tanggal Proyek (opsional)</label>
+              <input type="text" name="date" value="{{ old('date') }}" placeholder="2025-11-30"
+                class="w-full px-4 py-3 border rounded-lg @error('date') border-red-500 @enderror">
+              @error('date')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Durasi -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Durasi (opsional)</label>
+              <input type="text" name="duration" value="{{ old('duration') }}" placeholder="2 bulan, 3 minggu..."
+                class="w-full px-4 py-3 border rounded-lg @error('duration') border-red-500 @enderror">
+              @error('duration')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Challenge -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Challenge (opsional)</label>
+              <textarea name="challenge" rows="3" placeholder="Tantangan proyek..."
+                class="w-full px-4 py-3 border rounded-lg @error('challenge') border-red-500 @enderror">{{ old('challenge') }}</textarea>
+              @error('challenge')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Solution -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Solution (opsional)</label>
+              <textarea name="solution" rows="3" placeholder="Solusi proyek..."
+                class="w-full px-4 py-3 border rounded-lg @error('solution') border-red-500 @enderror">{{ old('solution') }}</textarea>
+              @error('solution')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Results (array) -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Results / Pencapaian (opsional)</label>
+              <input type="text" name="results[]" value="{{ old('results.0') }}" placeholder="Contoh: Meningkatkan penjualan 20%"
+                class="w-full px-4 py-3 border rounded-lg mb-2 @error('results') border-red-500 @enderror">
+              <input type="text" name="results[]" value="{{ old('results.1') }}" placeholder="Contoh: 1000+ user terdaftar"
+                class="w-full px-4 py-3 border rounded-lg mb-2">
+              <p class="text-xs text-gray-500">Tambahkan lebih banyak di controller jika diperlukan</p>
+              @error('results')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Technologies (array) -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Technologies (opsional)</label>
+              <input type="text" name="technologies[]" value="{{ old('technologies.0') }}" placeholder="Laravel"
+                class="w-full px-4 py-3 border rounded-lg mb-2 @error('technologies') border-red-500 @enderror">
+              <input type="text" name="technologies[]" value="{{ old('technologies.1') }}" placeholder="TailwindCSS"
+                class="w-full px-4 py-3 border rounded-lg mb-2">
+              <p class="text-xs text-gray-500">Tambahkan lebih banyak di controller jika diperlukan</p>
+              @error('technologies')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Tautan -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Tautan Proyek (opsional)</label>
+              <input type="url" name="link" value="{{ old('link') }}" placeholder="https://contoh.com"
+                class="w-full px-4 py-3 border rounded-lg @error('link') border-red-500 @enderror">
+              @error('link')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Gambar Utama -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Gambar Utama (maks 2MB)</label>
+              <input type="file" name="image" accept="image/*"
+                class="w-full px-4 py-3 border rounded-lg @error('image') border-red-500 @enderror">
+              @error('image')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+            </div>
+
+            <!-- Gallery Images -->
+            <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Gallery Images (opsional, multiple)</label>
+              <input type="file" name="images[]" accept="image/*" multiple
+                class="w-full px-4 py-3 border rounded-lg @error('images') border-red-500 @enderror">
+              <p class="text-xs text-gray-500">Upload beberapa gambar sekaligus, maksimal 2MB per file</p>
+              @error('images')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
             </div>
 
             <!-- Tombol -->
             <div class="flex space-x-3">
-              <button type="submit" class="bg-gradient-to-r from-primary to-secondary text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg transition-shadow flex items-center gap-2">
+              <button type="submit" class="bg-gradient-to-r from-primary to-secondary text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg flex items-center gap-2">
                 <i class="fas fa-save"></i> SIMPAN PORTFOLIO
               </button>
-              <a href="{{ route('admin.portfolios.index') }}" class="bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-lg hover:bg-gray-400 transition-colors flex items-center gap-2">
+              <a href="{{ route('admin.portfolios.index') }}" class="bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-lg hover:bg-gray-400 flex items-center gap-2">
                 <i class="fas fa-arrow-left"></i> BATAL
               </a>
             </div>
@@ -182,9 +221,8 @@
     </div>
   </div>
 
-  <!-- JavaScript -->
+  <!-- JS Sidebar & Dark Mode -->
   <script>
-    // Sidebar & Dark Mode (sama seperti sebelumnya)
     const sidebar = document.getElementById('sidebar');
     const openBtn = document.getElementById('open-sidebar');
     const closeBtn = document.getElementById('close-sidebar');

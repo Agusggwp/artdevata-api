@@ -25,16 +25,15 @@
     }
   </script>
 
-  <!-- Google Fonts: Inter -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  
+
   <style>
     .sidebar-active { @apply bg-gradient-to-r from-primary to-secondary text-white; }
     .sidebar-hover:hover { @apply bg-gray-100 dark:bg-gray-700; }
-    .card-hover:hover { @apply shadow-xl transform -translate-y-1 transition-all duration-300; }
     .btn { @apply px-4 py-2 rounded-lg font-medium transition-all duration-200; }
   </style>
 </head>
@@ -50,26 +49,27 @@
           <i class="fas fa-times text-xl"></i>
         </button>
       </div>
+
       <nav class="mt-6">
-        <a href="{{ route('admin.panel') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
+        <a href="{{ route('admin.panel') }}" class="flex items-center px-6 py-3 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
         </a>
-        <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
+        <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-box mr-3"></i> Layanan
         </a>
-        <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover sidebar-active rounded-l-full mr-3">
+        <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 sidebar-active rounded-l-full mr-3">
           <i class="fas fa-chart-line mr-3"></i> Portfolio
         </a>
-        <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
+        <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-cog mr-3"></i> Blog
         </a>
       </nav>
     </div>
 
-    <!-- Overlay (mobile) -->
+    <!-- Overlay -->
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
 
-    <!-- Main Content -->
+    <!-- MAIN -->
     <div class="flex-1 flex flex-col overflow-hidden">
 
       <!-- Header -->
@@ -81,26 +81,22 @@
             </button>
             <h2 class="text-xl font-semibold">Kelola Portfolio</h2>
           </div>
+
           <div class="flex items-center space-x-4">
-            <!-- Dark Mode Toggle -->
             <button id="dark-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
               <i class="fas fa-moon text-lg"></i>
             </button>
-            <!-- Notification -->
-            <button class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-              <i class="fas fa-bell text-lg"></i>
-              <span class="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full"></span>
-            </button>
-            <!-- Profile -->
+
             <div class="flex items-center space-x-3">
-              <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('admin')->user()->name) }}&background=4361ee&color=fff&bold=true" alt="Admin" class="w-10 h-10 rounded-full ring-2 ring-primary"/>
+              <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('admin')->user()->name) }}&background=4361ee&color=fff&bold=true"
+                class="w-10 h-10 rounded-full ring-2 ring-primary">
               <div class="hidden sm:block">
                 <p class="text-sm font-medium">{{ Auth::guard('admin')->user()->name }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::guard('admin')->user()->email }}</p>
+                <p class="text-xs text-gray-500">{{ Auth::guard('admin')->user()->email }}</p>
               </div>
             </div>
-            <!-- Logout -->
-            <form method="POST" action="{{ route('admin.logout') }}" class="d-inline">
+
+            <form method="POST" action="{{ route('admin.logout') }}">
               @csrf
               <button class="text-sm text-red-600 hover:underline">Logout</button>
             </form>
@@ -108,10 +104,9 @@
         </div>
       </header>
 
-      <!-- Content -->
+      <!-- CONTENT -->
       <main class="flex-1 overflow-y-auto p-4 lg:p-8">
 
-        <!-- FLASH MESSAGE -->
         @if(session('success'))
           <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center">
             <i class="fas fa-check-circle mr-2"></i>
@@ -119,73 +114,120 @@
           </div>
         @endif
 
-        <!-- TOMBOL TAMBAH -->
         <div class="mb-6">
           <a href="{{ route('admin.portfolios.create') }}" class="btn bg-gradient-to-r from-primary to-secondary text-white hover:shadow-lg">
             <i class="fas fa-plus mr-2"></i> Tambah Portfolio
           </a>
         </div>
 
-        <!-- Table -->
+        <!-- TABLE -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
           <div class="p-6 border-b dark:border-gray-700">
             <h3 class="text-lg font-semibold">Daftar Portfolio</h3>
           </div>
+
           <div class="overflow-x-auto">
             <table class="w-full">
               <thead class="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Judul</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Deskripsi</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Gambar</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tautan</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Aksi</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium">Judul</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium">Kategori</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium">Client</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium">Gambar</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium">Gallery</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium">Tech</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium">Tautan</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium">Aksi</th>
                 </tr>
               </thead>
+
               <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                 @forelse($portfolios as $portfolio)
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium">{{ $portfolio->title }}</div>
-                  </td>
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+
+                  <!-- TITLE -->
                   <td class="px-6 py-4">
-                    <div class="text-sm text-gray-600 dark:text-gray-400">{{ Str::limit($portfolio->description, 80) }}</div>
+                    <div class="font-medium">{{ $portfolio->title }}</div>
+                    <div class="text-xs text-gray-500">{{ Str::limit($portfolio->description, 40) }}</div>
                   </td>
+
+                  <!-- CATEGORY -->
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 bg-primary/10 text-primary rounded-md text-xs">
+                      {{ $portfolio->category ?? '-' }}
+                    </span>
+                  </td>
+
+                  <!-- CLIENT -->
+                  <td class="px-6 py-4">
+                    {{ $portfolio->client ?? '-' }}
+                  </td>
+
+                  <!-- MAIN IMAGE -->
                   <td class="px-6 py-4">
                     @if($portfolio->image)
-                      <img src="{{ Storage::url($portfolio->image) }}" alt="Gambar Portfolio" class="w-16 h-16 object-cover rounded-lg shadow-sm">
+                      <img src="{{ Storage::url($portfolio->image) }}" class="w-16 h-16 rounded-lg object-cover shadow">
                     @else
-                      <span class="text-xs text-gray-400">Tidak ada gambar</span>
+                      <span class="text-xs text-gray-400">Kosong</span>
                     @endif
                   </td>
+
+                  <!-- GALLERY -->
                   <td class="px-6 py-4">
-                    @if($portfolio->link)
-                      <a href="{{ $portfolio->link }}" target="_blank" 
-                         class="text-primary hover:text-secondary font-medium text-sm flex items-center gap-1">
-                        <i class="fas fa-external-link-alt"></i> Lihat Proyek
+                    <div class="flex gap-2">
+                      @if(is_array($portfolio->images))
+                        @foreach(array_slice($portfolio->images, 0, 3) as $img)
+                          <img src="{{ asset('storage/' . $img) }}" class="w-10 h-10 rounded-lg object-cover border shadow">
+                        @endforeach
+                      @else
+                        <span class="text-xs text-gray-400">Tidak ada</span>
+                      @endif
+                    </div>
+                  </td>
+
+                  <!-- TECHNOLOGIES -->
+                  <td class="px-6 py-4">
+                    <div class="flex flex-wrap gap-1">
+                      @if(is_array($portfolio->technologies))
+                        @foreach($portfolio->technologies as $tech)
+                        <span class="px-2 py-1 bg-secondary/10 text-secondary text-xs rounded-md">
+                          {{ $tech }}
+                        </span>
+                        @endforeach
+                      @else
+                        <span class="text-xs text-gray-400">-</span>
+                      @endif
+                    </div>
+                  </td>
+
+                  <!-- LINK -->
+                  <td class="px-6 py-4">
+                    @if($portfolio->link && $portfolio->link !== '#')
+                      <a href="{{ $portfolio->link }}" target="_blank" class="text-primary flex items-center gap-1">
+                        <i class="fas fa-external-link-alt"></i> Buka
                       </a>
                     @else
-                      <span class="text-xs text-gray-400">Tidak ada tautan</span>
+                      <span class="text-xs text-gray-400">Tidak ada</span>
                     @endif
                   </td>
-                  <td class="px-6 py-4 text-sm font-medium space-x-3">
-                    <a href="{{ route('admin.portfolios.edit', $portfolio) }}" class="text-primary hover:underline flex items-center gap-1">
+
+                  <!-- ACTIONS -->
+                  <td class="px-6 py-4 space-x-3">
+                    <a href="{{ route('admin.portfolios.edit', $portfolio) }}" class="text-primary hover:underline">
                       <i class="fas fa-edit"></i> Edit
                     </a>
                     <form action="{{ route('admin.portfolios.destroy', $portfolio) }}" method="POST" class="inline">
                       @csrf @method('DELETE')
-                      <button type="submit" class="text-danger hover:underline flex items-center gap-1" 
-                              onclick="return confirm('Yakin ingin menghapus portfolio ini?')">
+                      <button onclick="return confirm('Hapus portfolio ini?')" class="text-danger hover:underline">
                         <i class="fas fa-trash"></i> Hapus
                       </button>
                     </form>
                   </td>
                 </tr>
+
                 @empty
                 <tr>
-                  <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                    Belum ada portfolio. <a href="{{ route('admin.portfolios.create') }}" class="text-primary underline">Tambah sekarang</a>
-                  </td>
+                  <td colspan="8" class="px-6 py-8 text-center text-gray-400">Belum ada portfolio.</td>
                 </tr>
                 @endforelse
               </tbody>
@@ -197,13 +239,14 @@
     </div>
   </div>
 
-  <!-- JavaScript -->
+  <!-- JS -->
   <script>
-    // Sidebar Mobile
     const sidebar = document.getElementById('sidebar');
     const openBtn = document.getElementById('open-sidebar');
     const closeBtn = document.getElementById('close-sidebar');
     const overlay = document.getElementById('overlay');
+    const darkToggle = document.getElementById('dark-toggle');
+    const html = document.documentElement;
 
     openBtn?.addEventListener('click', () => {
       sidebar.classList.remove('-translate-x-full');
@@ -220,22 +263,15 @@
       overlay.classList.add('hidden');
     });
 
-    // Dark Mode
-    const darkToggle = document.getElementById('dark-toggle');
-    const html = document.documentElement;
-
     darkToggle?.addEventListener('click', () => {
       html.classList.toggle('dark');
-      const isDark = html.classList.contains('dark');
-      darkToggle.innerHTML = isDark ? '<i class="fas fa-sun text-lg"></i>' : '<i class="fas fa-moon text-lg"></i>';
-      localStorage.setItem('darkMode', isDark);
+      localStorage.setItem('darkMode', html.classList.contains('dark'));
     });
 
-    if (localStorage.getItem('darkMode') === 'true' || 
-        (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (localStorage.getItem('darkMode') === 'true') {
       html.classList.add('dark');
-      darkToggle.innerHTML = '<i class="fas fa-sun text-lg"></i>';
     }
   </script>
+
 </body>
 </html>
