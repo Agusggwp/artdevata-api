@@ -60,13 +60,14 @@
         <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-box mr-3"></i> Layanan
         </a>
+
         <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-chart-line mr-3"></i> Portfolio
         </a>
+
         <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-cog mr-3"></i> Blog
         </a>
-       
       </nav>
     </div>
 
@@ -91,11 +92,13 @@
             <button id="dark-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
               <i class="fas fa-moon text-lg"></i>
             </button>
+
             <!-- Notification -->
             <button class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
               <i class="fas fa-bell text-lg"></i>
               <span class="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full"></span>
             </button>
+
             <!-- Profile -->
             <div class="flex items-center space-x-3">
               <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('admin')->user()->name) }}&background=4361ee&color=fff&bold=true" alt="Admin" class="w-10 h-10 rounded-full ring-2 ring-primary"/>
@@ -104,8 +107,9 @@
                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::guard('admin')->user()->email }}</p>
               </div>
             </div>
+
             <!-- Logout -->
-            <form method="POST" action="{{ route('admin.logout') }}" class="d-inline">
+            <form method="POST" action="{{ route('admin.logout') }}">
               @csrf
               <button class="text-sm text-red-600 hover:underline">Logout</button>
             </form>
@@ -134,19 +138,45 @@
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Judul</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Deskripsi</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Fitur</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Gambar</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Aksi</th>
                 </tr>
               </thead>
+
               <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+
                 @forelse($services as $service)
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+
+                  <!-- JUDUL -->
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium">{{ $service->title }}</div>
                   </td>
+
+                  <!-- DESKRIPSI -->
                   <td class="px-6 py-4">
-                    <div class="text-sm text-gray-600 dark:text-gray-400">{{ Str::limit($service->description, 80) }}</div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                      {{ Str::limit($service->description, 80) }}
+                    </div>
                   </td>
+
+                  <!-- FITUR -->
+                  <td class="px-6 py-4">
+                    <div class="flex flex-wrap gap-1">
+                      @if(is_array($service->features))
+                        @foreach($service->features as $feature)
+                          <span class="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
+                            {{ $feature }}
+                          </span>
+                        @endforeach
+                      @else
+                        <span class="text-xs text-gray-400">-</span>
+                      @endif
+                    </div>
+                  </td>
+
+                  <!-- GAMBAR -->
                   <td class="px-6 py-4">
                     @if($service->image)
                       <img src="{{ Storage::url($service->image) }}" alt="Gambar Layanan" class="w-16 h-16 object-cover rounded-lg shadow-sm">
@@ -154,6 +184,8 @@
                       <span class="text-xs text-gray-400">Tidak ada gambar</span>
                     @endif
                   </td>
+
+                  <!-- AKSI -->
                   <td class="px-6 py-4 text-sm font-medium space-x-3">
                     <a href="{{ route('admin.services.edit', $service) }}" class="text-primary hover:underline">Edit</a>
                     <form action="{{ route('admin.services.destroy', $service) }}" method="POST" class="inline">
@@ -162,14 +194,18 @@
                       <button type="submit" class="text-danger hover:underline" onclick="return confirm('Yakin ingin menghapus layanan ini?')">Hapus</button>
                     </form>
                   </td>
+
                 </tr>
+
                 @empty
                 <tr>
-                  <td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                    Belum ada layanan. <a href="{{ route('admin.services.create') }}" class="text-primary underline">Tambah sekarang</a>
+                  <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                    Belum ada layanan. 
+                    <a href="{{ route('admin.services.create') }}" class="text-primary underline">Tambah sekarang</a>
                   </td>
                 </tr>
                 @endforelse
+
               </tbody>
             </table>
           </div>

@@ -183,26 +183,6 @@
   </div>
 </div>
 
-
-<div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-6 rounded-2xl text-white card-hover cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-105"
-     onclick="window.open('https://invoice.artdevata.net/', '_blank')">
-  <div class="flex items-center justify-center h-full">
-    <div class="text-center">
-      <!-- Icon Database (Font Awesome 6) -->
-      <i class="fas fa-database text-5xl mb-3 opacity-80"></i>
-      
-      <p class="text-lg font-bold">Web Hosting Panel</p>
-      <p class="text-xs opacity-80 mt-1 flex items-center justify-center gap-1">
-        <i class="fas fa-external-link-alt"></i> Buka Sekarang
-      </p>
-    </div>
-  </div>
-</div>
-
-
-</div>
-
-
 </div>
 
         <!-- Chart + Activity -->

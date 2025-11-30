@@ -22,18 +22,27 @@ class AdminServiceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image'       => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'features'    => 'nullable|array',        // fitur array
+            'features.*'  => 'nullable|string',       // setiap item string
         ]);
 
-        $data = $request->all();
+        $data = $request->except('features');
+
+        // Simpan fitur dalam format JSON
+        $data['features'] = $request->features ?? [];
+
+        // Upload image
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('services', 'public');
         }
 
         Service::create($data);
-        return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil dibuat.');
+
+        return redirect()->route('admin.services.index')
+                         ->with('success', 'Layanan berhasil dibuat.');
     }
 
     public function edit(Service $service)
@@ -44,25 +53,41 @@ class AdminServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image'       => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'features'    => 'nullable|array',
+            'features.*'  => 'nullable|string',
         ]);
 
-        $data = $request->all();
+        $data = $request->except('features');
+
+        // Update features JSON
+        $data['features'] = $request->features ?? [];
+
+        // Update image
         if ($request->hasFile('image')) {
-            if ($service->image) Storage::disk('public')->delete($service->image);
+            if ($service->image) {
+                Storage::disk('public')->delete($service->image);
+            }
             $data['image'] = $request->file('image')->store('services', 'public');
         }
 
         $service->update($data);
-        return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil diupdate.');
+
+        return redirect()->route('admin.services.index')
+                         ->with('success', 'Layanan berhasil diupdate.');
     }
 
     public function destroy(Service $service)
     {
-        if ($service->image) Storage::disk('public')->delete($service->image);
+        if ($service->image) {
+            Storage::disk('public')->delete($service->image);
+        }
+
         $service->delete();
-        return redirect()->route('admin.services.index')->with('success', 'Layanan berhasil dihapus.');
+
+        return redirect()->route('admin.services.index')
+                         ->with('success', 'Layanan berhasil dihapus.');
     }
 }
