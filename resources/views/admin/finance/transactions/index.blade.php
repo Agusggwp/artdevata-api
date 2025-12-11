@@ -55,7 +55,12 @@
               </td>
               <td class="py-3 text-sm text-gray-600">{{ $t->description }}</td>
               <td class="py-3 text-right font-semibold">{{ $t->type === 'credit' ? '+' : '-' }} Rp {{ number_format($t->amount,0,',','.') }}</td>
-              <td class="py-3 text-right">{{ $t->balance_after ? 'Rp '.number_format($t->balance_after,0,',','.') : '-' }}</td>
+              <td class="py-3 text-right">
+                @php
+                  $bal = $balanceMap[$t->id] ?? ($t->balance_after ?? null);
+                @endphp
+                {{ $bal ? 'Rp '.number_format($bal,0,',','.') : '-' }}
+              </td>
             </tr>
           @empty
             <tr><td colspan="6" class="py-4 text-center text-gray-500">Belum ada transaksi.</td></tr>

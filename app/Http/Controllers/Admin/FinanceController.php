@@ -44,7 +44,30 @@ class FinanceController extends Controller
         $totalSalariesPaid = (float) SalaryPayment::where('status','paid')->sum('amount');
         $companyBalance = round($totalPaidInvoices - $totalSalariesPaid + $transactionsNet, 2);
 
-        return view('admin.finance.transactions.index', compact('transactions','companyBalance','qType','qFrom','qTo','qSearch'));
+        // --- NEW: compute balance snapshot per transaction (up to transaksi.created_at) ---
+        $balanceMap = [];
+        foreach ($transactions as $t) {
+            $manualNet = (float) CompanyTransaction::selectRaw(
+                "COALESCE(SUM(CASE WHEN type='credit' THEN amount WHEN type='debit' THEN -amount ELSE 0 END),0) as net"
+            )->where('created_at', '<=', $t->created_at)->value('net');
+
+            // invoices paid up to this time (assumes invoices have paid_at column; if not, adjust to use updated_at)
+            $invoicesPaidUpTo = (float) Invoice::where('status','paid')
+                ->where('paid_at', '<=', $t->created_at)
+                ->sum('total');
+
+            // salaries paid up to this time (assumes salary_payments have paid_at)
+            $salariesPaidUpTo = (float) SalaryPayment::where('status','paid')
+                ->where('paid_at', '<=', $t->created_at)
+                ->sum('amount');
+
+            $balanceAtTime = round($invoicesPaidUpTo - $salariesPaidUpTo + $manualNet, 2);
+            $balanceMap[$t->id] = $balanceAtTime;
+        }
+
+        return view('admin.finance.transactions.index', compact(
+            'transactions','companyBalance','qType','qFrom','qTo','qSearch','balanceMap'
+        ));
     }
 
     // simpan penyesuaian saldo (tetap seperti sebelumnya)
