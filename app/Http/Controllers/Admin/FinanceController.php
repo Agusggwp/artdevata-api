@@ -36,7 +36,7 @@ class FinanceController extends Controller
 
         $transactions = $query->paginate(20)->withQueryString();
 
-        // hitung company balance (invoice paid - salary paid + manual transactions)
+        // current company balance
         $transactionsNet = (float) CompanyTransaction::selectRaw(
             "COALESCE(SUM(CASE WHEN type='credit' THEN amount WHEN type='debit' THEN -amount ELSE 0 END),0) as net"
         )->value('net');
@@ -44,22 +44,26 @@ class FinanceController extends Controller
         $totalSalariesPaid = (float) SalaryPayment::where('status','paid')->sum('amount');
         $companyBalance = round($totalPaidInvoices - $totalSalariesPaid + $transactionsNet, 2);
 
-        // --- NEW: compute balance snapshot per transaction (up to transaksi.created_at) ---
+        // balance snapshot per transaction using status='paid' and updated_at <= transaction time
         $balanceMap = [];
         foreach ($transactions as $t) {
             $manualNet = (float) CompanyTransaction::selectRaw(
                 "COALESCE(SUM(CASE WHEN type='credit' THEN amount WHEN type='debit' THEN -amount ELSE 0 END),0) as net"
             )->where('created_at', '<=', $t->created_at)->value('net');
 
-            // invoices paid up to this time (assumes invoices have paid_at column; if not, adjust to use updated_at)
+            // gunakan status='paid' dan updated_at (bukan paid_at)
             $invoicesPaidUpTo = (float) Invoice::where('status','paid')
-                ->where('paid_at', '<=', $t->created_at)
+                ->where('updated_at', '<=', $t->created_at)
                 ->sum('total');
 
-            // salaries paid up to this time (assumes salary_payments have paid_at)
             $salariesPaidUpTo = (float) SalaryPayment::where('status','paid')
-                ->where('paid_at', '<=', $t->created_at)
-                ->sum('amount');
+                ->where(function($q) use ($t) {
+                    // jika ada paid_at gunakan paid_at, kalau tidak fallback ke updated_at
+                    $q->where('paid_at', '<=', $t->created_at)
+                      ->orWhere(function($q2) use ($t) {
+                          $q2->whereNull('paid_at')->where('updated_at', '<=', $t->created_at);
+                      });
+                })->sum('amount');
 
             $balanceAtTime = round($invoicesPaidUpTo - $salariesPaidUpTo + $manualNet, 2);
             $balanceMap[$t->id] = $balanceAtTime;
