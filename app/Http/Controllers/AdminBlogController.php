@@ -23,11 +23,12 @@ class AdminBlogController extends Controller
     {
         $request->validate([
             'title'       => 'required|string|max:255',
+            'category'    => 'nullable|string|max:255',
             'content'     => 'required|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->only(['title', 'content']);
+        $data = $request->only(['title', 'category', 'content']);
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('blogs', 'public');
         }
@@ -48,11 +49,12 @@ class AdminBlogController extends Controller
     {
         $request->validate([
             'title'       => 'required|string|max:255',
+            'category'    => 'nullable|string|max:255',
             'content'     => 'required|string',
             'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->only(['title', 'content']);
+        $data = $request->only(['title', 'category', 'content']);
         if ($request->hasFile('image')) {
             if ($blog->image) {
                 Storage::disk('public')->delete($blog->image);

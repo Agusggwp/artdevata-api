@@ -141,6 +141,7 @@
               <thead class="bg-gray-50 dark:bg-gray-700">
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Judul</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Kategori</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Isi</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Gambar</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Aksi</th>
@@ -151,6 +152,11 @@
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium">{{ $blog->title }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full text-xs font-medium">
+                      {{ $blog->category ?? 'Umum' }}
+                    </span>
                   </td>
                   <td class="px-6 py-4">
                     <div class="text-sm text-gray-600 dark:text-gray-400">{{ Str::limit($blog->content, 80) }}</div>
@@ -173,7 +179,7 @@
                 </tr>
                 @empty
                 <tr>
-                  <td colspan="4" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                  <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                     Belum ada blog. <a href="{{ route('admin.blogs.create') }}" class="text-primary underline">Tambah sekarang</a>
                   </td>
                 </tr>

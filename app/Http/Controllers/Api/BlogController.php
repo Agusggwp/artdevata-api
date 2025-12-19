@@ -10,7 +10,7 @@ class BlogController extends Controller
     // GET /api/blogs → semua artikel
     public function index()
     {
-        $blogs = Blog::select('id', 'title', 'content', 'image', 'created_at')
+        $blogs = Blog::select('id', 'title', 'category', 'content', 'image', 'created_at')
                      ->orderBy('created_at', 'desc')
                      ->get();
         return response()->json($blogs);
@@ -19,7 +19,7 @@ class BlogController extends Controller
     // GET /api/blogs/1 → satu artikel
     public function show($id)
     {
-        $blog = Blog::select('id', 'title', 'content', 'image', 'created_at')
+        $blog = Blog::select('id', 'title', 'category', 'content', 'image', 'created_at')
                     ->findOrFail($id);
         return response()->json($blog);
     }

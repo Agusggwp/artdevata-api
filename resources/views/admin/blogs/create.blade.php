@@ -88,6 +88,10 @@
               <input type="text" name="title" value="{{ old('title') }}" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700" required>
             </div>
             <div class="mb-5">
+              <label class="block text-sm font-medium mb-2">Kategori Blog</label>
+              <input type="text" name="category" value="{{ old('category') }}" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700">
+            </div>
+            <div class="mb-5">
               <label class="block text-sm font-medium mb-2">Isi Blog</label>
               <textarea name="content" rows="10" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700" required>{{ old('content') }}</textarea>
             </div>
