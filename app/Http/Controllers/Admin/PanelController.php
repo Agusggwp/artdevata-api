@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\Admin;
 use App\Models\CompanyTransaction;
 use App\Models\SalaryPayment;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,6 +29,7 @@ class PanelController extends Controller
         $totalBlogs = Blog::count();
         $totalPortfolios = Portfolio::count();
         $totalServices = Service::count();
+        $totalClients = Client::count();
 
         // Project counts
         $totalProjects = Project::count();
@@ -134,7 +136,7 @@ class PanelController extends Controller
 
         return view('admin.panel', array_merge(compact(
             'totalPaidAmount','paidInvoiceCount','totalInvoiceAmount','totalInvoiceCount',
-            'totalBlogs','totalPortfolios','totalServices',
+            'totalBlogs','totalPortfolios','totalServices','totalClients',
             'totalProjects','ongoingProjects','completedProjects','pendingProjects',
             // payroll
             'totalQAPayout','totalDevPayout','qaPayouts','devPayouts','qaRecipients','devRecipients',

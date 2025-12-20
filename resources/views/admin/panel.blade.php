@@ -68,6 +68,9 @@
         <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
           <i class="fas fa-cog mr-3"></i> Blog
         </a>
+        <a href="{{ route('admin.clients.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
+          <i class="fas fa-users mr-3"></i> Client
+        </a>
        
       </nav>
     </div>
@@ -201,12 +204,12 @@
           </div>
         </div>
 
-        <!-- GROUP 2: KONTEN (Blog, Portfolio, Layanan) -->
+        <!-- GROUP 2: KONTEN (Blog, Portfolio, Layanan, Client) -->
         <div class="mb-8">
           <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
             <i class="fas fa-layer-group text-purple-600 mr-2"></i> Konten & Layanan
           </h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
             <!-- Card Blog -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg card-hover border border-gray-200 dark:border-gray-700">
@@ -253,6 +256,22 @@
               </div>
               <a href="{{ route('admin.services.index') }}" class="text-sm text-pink-600 dark:text-pink-400 hover:underline flex items-center">
                 Lihat Layanan <i class="fas fa-arrow-right ml-2 text-xs"></i>
+              </a>
+            </div>
+
+            <!-- Card Client -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg card-hover border border-gray-200 dark:border-gray-700">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Total Client</p>
+                  <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ $totalClients ?? 0 }}</p>
+                </div>
+                <div class="w-12 h-12 bg-teal-100 dark:bg-teal-900 rounded-full flex items-center justify-center">
+                  <i class="fas fa-users text-teal-600 dark:text-teal-400 text-xl"></i>
+                </div>
+              </div>
+              <a href="{{ route('admin.clients.index') }}" class="text-sm text-teal-600 dark:text-teal-400 hover:underline flex items-center">
+                Kelola Client <i class="fas fa-arrow-right ml-2 text-xs"></i>
               </a>
             </div>
 

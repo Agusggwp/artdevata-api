@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\Api\PortfolioController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\ClientController as ApiClientController;
 use App\Http\Controllers\Api\ChatController as ApiChatController;
 use App\Http\Controllers\Admin\ChatController as AdminChatController;
 use App\Http\Controllers\Admin\PanelController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SalaryController;
 use App\Http\Controllers\Admin\FinanceController;
+use App\Http\Controllers\Admin\ClientController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -49,6 +51,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Finance management
         Route::get('/finance/transactions', [FinanceController::class, 'index'])->name('finance.transactions.index');
         Route::post('/finance/transaction', [FinanceController::class, 'store'])->name('finance.transaction.store');
+
+        // Client management
+        Route::resource('clients', ClientController::class);
     });
 });
 
@@ -81,6 +86,9 @@ Route::prefix('api')->group(function () {
     });
 
     Route::get('/blogs/{id}', [BlogController::class, 'show']);
+
+    // Clients - hanya client aktif dengan logo
+    Route::get('/clients', [ApiClientController::class, 'index']);
 
     // Chat API (opsional)
     // Route::post('/chat/send', [ApiChatController::class, 'send']);
