@@ -37,6 +37,9 @@ class DatabaseSeeder extends Seeder
 
         // Dummy Documentation Records
         $this->call(DocumentationSeeder::class);
+
+        // Security Roles & Permissions Seeder
+        $this->call(SecuritySeeder::class);
     }
 }
 

@@ -9,7 +9,21 @@ class Invoice extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'number',
+        'client_name',
+        'client_email',
+        'client_address',
+        'items',
+        'subtotal',
+        'tax',
+        'total',
+        'status',
+        'invoice_date',
+        'due_date',
+        'notes',
+        'admin_id',
+    ];
 
     protected $casts = [
         'items' => 'array',

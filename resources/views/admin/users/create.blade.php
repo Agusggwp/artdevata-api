@@ -8,7 +8,7 @@
 <div class="flex items-center justify-between mb-6">
   <div>
     <h1 class="text-xl font-bold text-slate-900">Tambah Akun Administrator Baru</h1>
-    <p class="text-xs text-slate-700 font-medium">Daftarkan anggota tim baru untuk mengakses management panel ARTDEVATA</p>
+    <p class="text-xs text-slate-700 font-medium">Daftarkan anggota tim baru dan tentukan tingkat kewenangan aksesnya</p>
   </div>
 
   <a href="{{ route('admin.users.index') }}" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-300 transition-colors flex items-center space-x-2">
@@ -68,6 +68,44 @@
       @enderror
     </div>
 
+    <!-- Role & Status Selection Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label for="role_id" class="block text-xs font-bold text-slate-800 mb-1.5">Peran / Role <span class="text-rose-500">*</span></label>
+        <select 
+          id="role_id" 
+          name="role_id"
+          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-bold focus:bg-white focus:border-[#14433B] focus:ring-2 focus:ring-[#14433B]/20 outline-hidden transition-all"
+          required
+        >
+          <option value="">-- Pilih Peran --</option>
+          @foreach($roles as $role)
+            <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
+          @endforeach
+        </select>
+        @error('role_id')
+          <p class="text-rose-600 text-[11px] font-semibold mt-1">{{ $message }}</p>
+        @enderror
+      </div>
+
+      <div>
+        <label for="status" class="block text-xs font-bold text-slate-800 mb-1.5">Status Akun <span class="text-rose-500">*</span></label>
+        <select 
+          id="status" 
+          name="status"
+          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-bold focus:bg-white focus:border-[#14433B] focus:ring-2 focus:ring-[#14433B]/20 outline-hidden transition-all"
+          required
+        >
+          <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>Aktif</option>
+          <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Nonaktif</option>
+          <option value="suspended" {{ old('status') == 'suspended' ? 'selected' : '' }}>Ditangguhkan</option>
+        </select>
+        @error('status')
+          <p class="text-rose-600 text-[11px] font-semibold mt-1">{{ $message }}</p>
+        @enderror
+      </div>
+    </div>
+
     <!-- Password Field -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
@@ -81,7 +119,7 @@
             type="password" 
             name="password" 
             class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-bold placeholder-slate-500 focus:bg-white focus:border-[#14433B] focus:ring-2 focus:ring-[#14433B]/20 outline-hidden transition-all duration-200"
-            placeholder="Minimal 6 karakter" 
+            placeholder="Minimal 8 karakter" 
             required
           >
         </div>

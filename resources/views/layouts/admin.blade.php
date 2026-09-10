@@ -115,41 +115,53 @@
               <span>Dashboard</span>
             </a>
 
-            <!-- Projects -->
-            <a href="{{ route('admin.projects.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.projects.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-diagram-project w-5 mr-3 text-center {{ request()->routeIs('admin.projects.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Proyek</span>
-            </a>
+            @if(Auth::guard('admin')->user()?->hasPermission('projects.view'))
+              <!-- Projects -->
+              <a href="{{ route('admin.projects.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.projects.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-diagram-project w-5 mr-3 text-center {{ request()->routeIs('admin.projects.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Proyek</span>
+              </a>
+            @endif
 
-            <!-- Services -->
-            <a href="{{ route('admin.services.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.services.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-cubes w-5 mr-3 text-center {{ request()->routeIs('admin.services.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Layanan</span>
-            </a>
+            @if(Auth::guard('admin')->user()?->hasPermission('services.view'))
+              <!-- Services -->
+              <a href="{{ route('admin.services.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.services.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-cubes w-5 mr-3 text-center {{ request()->routeIs('admin.services.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Layanan</span>
+              </a>
+            @endif
 
-            <!-- Portfolios -->
-            <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.portfolios.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-briefcase w-5 mr-3 text-center {{ request()->routeIs('admin.portfolios.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Portfolio</span>
-            </a>
+            @if(Auth::guard('admin')->user()?->hasPermission('portfolios.view'))
+              <!-- Portfolios -->
+              <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.portfolios.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-briefcase w-5 mr-3 text-center {{ request()->routeIs('admin.portfolios.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Portfolio</span>
+              </a>
+            @endif
 
-            <!-- Blogs -->
-            <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.blogs.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-newspaper w-5 mr-3 text-center {{ request()->routeIs('admin.blogs.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Blog & Berita</span>
-            </a>
+            @if(Auth::guard('admin')->user()?->hasPermission('blogs.view'))
+              <!-- Blogs -->
+              <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.blogs.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-newspaper w-5 mr-3 text-center {{ request()->routeIs('admin.blogs.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Blog & Berita</span>
+              </a>
+            @endif
 
-            <!-- Clients -->
-            <a href="{{ route('admin.clients.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.clients.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-users-rectangle w-5 mr-3 text-center {{ request()->routeIs('admin.clients.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Klien</span>
-            </a>
+            @if(Auth::guard('admin')->user()?->hasPermission('clients.view'))
+              <!-- Clients -->
+              <a href="{{ route('admin.clients.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.clients.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-users-rectangle w-5 mr-3 text-center {{ request()->routeIs('admin.clients.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Klien</span>
+              </a>
+            @endif
 
-            <!-- Documentations -->
-            <a href="{{ route('admin.documentations.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.documentations.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-camera-retro w-5 mr-3 text-center {{ request()->routeIs('admin.documentations.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Dokumentasi</span>
-            </a>
+            @if(Auth::guard('admin')->user()?->hasPermission('documentations.view'))
+              <!-- Documentations -->
+              <a href="{{ route('admin.documentations.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.documentations.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-camera-retro w-5 mr-3 text-center {{ request()->routeIs('admin.documentations.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Dokumentasi</span>
+              </a>
+            @endif
 
           </nav>
         </div>
@@ -159,36 +171,82 @@
           <div class="px-3 mb-2 text-[11px] font-bold tracking-wider text-[#21C9A4] uppercase">Keuangan & Bisnis</div>
           <nav class="space-y-1">
             
-            <!-- Invoices -->
-            <a href="{{ route('admin.invoices.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.invoices.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-file-invoice-dollar w-5 mr-3 text-center {{ request()->routeIs('admin.invoices.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Invoices</span>
-            </a>
+            @if(Auth::guard('admin')->user()?->hasPermission('invoices.view'))
+              <!-- Invoices -->
+              <a href="{{ route('admin.invoices.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.invoices.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-file-invoice-dollar w-5 mr-3 text-center {{ request()->routeIs('admin.invoices.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Invoices</span>
+              </a>
+            @endif
 
-            <!-- Transactions -->
-            <a href="{{ route('admin.finance.transactions.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.finance.transactions.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-wallet w-5 mr-3 text-center {{ request()->routeIs('admin.finance.transactions.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Transaksi</span>
-            </a>
+            @if(Auth::guard('admin')->user()?->hasPermission('finance.view'))
+              <!-- Transactions -->
+              <a href="{{ route('admin.finance.transactions.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.finance.transactions.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-wallet w-5 mr-3 text-center {{ request()->routeIs('admin.finance.transactions.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Transaksi</span>
+              </a>
+            @endif
 
-            <!-- Salaries -->
-            <a href="{{ route('admin.salaries.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.salaries.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-money-bill-wave w-5 mr-3 text-center {{ request()->routeIs('admin.salaries.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Gaji & Payroll</span>
-            </a>
+            @if(Auth::guard('admin')->user()?->hasPermission('salaries.view'))
+              <!-- Salaries -->
+              <a href="{{ route('admin.salaries.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.salaries.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-money-bill-wave w-5 mr-3 text-center {{ request()->routeIs('admin.salaries.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Gaji & Payroll</span>
+              </a>
+            @endif
 
           </nav>
         </div>
 
-        <!-- System & Admin Group -->
+        <!-- System & Security Group -->
         <div>
-          <div class="px-3 mb-2 text-[11px] font-bold tracking-wider text-[#21C9A4] uppercase">Pengaturan Sistem</div>
+          <div class="px-3 mb-2 text-[11px] font-bold tracking-wider text-[#21C9A4] uppercase">Tim & Keamanan</div>
           <nav class="space-y-1">
             
-            <!-- User Admin Management -->
-            <a href="{{ route('admin.users.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.users.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
-              <i class="fa-solid fa-user-shield w-5 mr-3 text-center {{ request()->routeIs('admin.users.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-              <span>Kelola Admin</span>
+            @if(Auth::guard('admin')->user()?->hasPermission('admins.view'))
+              <!-- User Admin Management -->
+              <a href="{{ route('admin.users.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.users.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-users-gear w-5 mr-3 text-center {{ request()->routeIs('admin.users.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Kelola Admin</span>
+              </a>
+            @endif
+
+            @if(Auth::guard('admin')->user()?->hasPermission('roles.manage'))
+              <!-- Roles & Permissions -->
+              <a href="{{ route('admin.roles.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.roles.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-user-shield w-5 mr-3 text-center {{ request()->routeIs('admin.roles.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Peran & Hak Akses</span>
+              </a>
+            @endif
+
+            @if(Auth::guard('admin')->user()?->hasPermission('security.view'))
+              <!-- Security Dashboard -->
+              <a href="{{ route('admin.security.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.security.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-shield-halved w-5 mr-3 text-center {{ request()->routeIs('admin.security.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Security Overview</span>
+              </a>
+            @endif
+
+            @if(Auth::guard('admin')->user()?->hasPermission('activity_logs.view'))
+              <!-- Activity Logs -->
+              <a href="{{ route('admin.activity-logs.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.activity-logs.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-clock-rotate-left w-5 mr-3 text-center {{ request()->routeIs('admin.activity-logs.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Audit Logs</span>
+              </a>
+            @endif
+
+            @if(Auth::guard('admin')->user()?->hasPermission('login_history.view'))
+              <!-- Login History -->
+              <a href="{{ route('admin.login-histories.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.login-histories.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-key w-5 mr-3 text-center {{ request()->routeIs('admin.login-histories.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Riwayat Login</span>
+              </a>
+            @endif
+
+            <!-- My Account Security -->
+            <a href="{{ route('admin.account.security') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.account.security') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+              <i class="fa-solid fa-lock w-5 mr-3 text-center {{ request()->routeIs('admin.account.security') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+              <span>Keamanan Akun Saya</span>
             </a>
 
           </nav>
@@ -275,6 +333,10 @@
                 <p class="text-[11px] text-slate-500 truncate">{{ Auth::guard('admin')->user()->email ?? 'admin@artdevata.com' }}</p>
               </div>
               <div class="py-1">
+                <a href="{{ route('admin.account.security') }}" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center space-x-2 transition-colors">
+                  <i class="fa-solid fa-lock text-[#14433B]"></i>
+                  <span>Keamanan Akun</span>
+                </a>
                 <form method="POST" action="{{ route('admin.logout') }}">
                   @csrf
                   <button type="submit" class="w-full text-left px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 flex items-center space-x-2 transition-colors">
