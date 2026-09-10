@@ -26,11 +26,29 @@ class SecuritySeeder extends Seeder
             ['name' => 'Manage Roles', 'slug' => 'roles.manage', 'module' => 'Roles & Permissions', 'description' => 'Mengatur peran / role pengguna'],
             ['name' => 'Manage Permissions', 'slug' => 'permissions.manage', 'module' => 'Roles & Permissions', 'description' => 'Mengatur matriks izin akses'],
 
+            // CRM / Leads
+            ['name' => 'View Leads', 'slug' => 'leads.view', 'module' => 'CRM & Leads', 'description' => 'Melihat daftar lead prospek'],
+            ['name' => 'Create Leads', 'slug' => 'leads.create', 'module' => 'CRM & Leads', 'description' => 'Menambahkan lead prospek baru'],
+            ['name' => 'Edit Leads', 'slug' => 'leads.edit', 'module' => 'CRM & Leads', 'description' => 'Mengubah data lead'],
+            ['name' => 'Delete Leads', 'slug' => 'leads.delete', 'module' => 'CRM & Leads', 'description' => 'Menghapus data lead'],
+            ['name' => 'Convert Leads', 'slug' => 'leads.convert', 'module' => 'CRM & Leads', 'description' => 'Mengkonversi lead menjadi client'],
+
+            // Quotations
+            ['name' => 'View Quotations', 'slug' => 'quotations.view', 'module' => 'Quotations', 'description' => 'Melihat daftar penawaran harga'],
+            ['name' => 'Create Quotations', 'slug' => 'quotations.create', 'module' => 'Quotations', 'description' => 'Membuat quotation penawaran baru'],
+            ['name' => 'Edit Quotations', 'slug' => 'quotations.edit', 'module' => 'Quotations', 'description' => 'Mengubah rincian penawaran'],
+            ['name' => 'Delete Quotations', 'slug' => 'quotations.delete', 'module' => 'Quotations', 'description' => 'Menghapus penawaran'],
+            ['name' => 'Send Quotations', 'slug' => 'quotations.send', 'module' => 'Quotations', 'description' => 'Mengirim quotation ke klien'],
+            ['name' => 'Approve Quotations', 'slug' => 'quotations.approve', 'module' => 'Quotations', 'description' => 'Menyetujui & konversi quotation ke project'],
+
             // Projects
             ['name' => 'View Projects', 'slug' => 'projects.view', 'module' => 'Projects', 'description' => 'Melihat daftar proyek'],
             ['name' => 'Create Projects', 'slug' => 'projects.create', 'module' => 'Projects', 'description' => 'Membuat proyek baru'],
             ['name' => 'Edit Projects', 'slug' => 'projects.edit', 'module' => 'Projects', 'description' => 'Mengedit data & status proyek'],
             ['name' => 'Delete Projects', 'slug' => 'projects.delete', 'module' => 'Projects', 'description' => 'Menghapus data proyek'],
+            ['name' => 'Kanban Projects', 'slug' => 'projects.kanban', 'module' => 'Projects', 'description' => 'Melihat dan mengatur papan Kanban proyek'],
+            ['name' => 'Manage Project Tasks', 'slug' => 'projects.tasks', 'module' => 'Projects', 'description' => 'Mengelola task & tugas proyek'],
+            ['name' => 'Manage Project Documents', 'slug' => 'projects.documents', 'module' => 'Projects', 'description' => 'Mengunggah & mengelola dokumen proyek'],
 
             // Services
             ['name' => 'View Services', 'slug' => 'services.view', 'module' => 'Services', 'description' => 'Melihat daftar layanan'],
@@ -51,7 +69,7 @@ class SecuritySeeder extends Seeder
             ['name' => 'Delete Blogs', 'slug' => 'blogs.delete', 'module' => 'Blogs', 'description' => 'Menghapus artikel blog'],
 
             // Clients
-            ['name' => 'View Clients', 'slug' => 'clients.view', 'module' => 'Clients', 'description' => 'Melihat daftar klien'],
+            ['name' => 'View Clients', 'slug' => 'clients.view', 'module' => 'Clients', 'description' => 'Melihat daftar & Client 360'],
             ['name' => 'Create Clients', 'slug' => 'clients.create', 'module' => 'Clients', 'description' => 'Menambahkan data klien baru'],
             ['name' => 'Edit Clients', 'slug' => 'clients.edit', 'module' => 'Clients', 'description' => 'Mengubah profil klien'],
             ['name' => 'Delete Clients', 'slug' => 'clients.delete', 'module' => 'Clients', 'description' => 'Menghapus klien'],
@@ -106,10 +124,12 @@ class SecuritySeeder extends Seeder
             ],
             'manager' => [
                 'name' => 'Manager',
-                'description' => 'Akses manajemen operasional bisnis, keuangan, proyek, dan konten',
+                'description' => 'Akses manajemen operasional bisnis, CRM, penawaran, keuangan, proyek, dan konten',
                 'permissions' => [
                     'dashboard.view',
-                    'projects.view', 'projects.create', 'projects.edit', 'projects.delete',
+                    'leads.view', 'leads.create', 'leads.edit', 'leads.delete', 'leads.convert',
+                    'quotations.view', 'quotations.create', 'quotations.edit', 'quotations.delete', 'quotations.send', 'quotations.approve',
+                    'projects.view', 'projects.create', 'projects.edit', 'projects.delete', 'projects.kanban', 'projects.tasks', 'projects.documents',
                     'clients.view', 'clients.create', 'clients.edit', 'clients.delete',
                     'services.view', 'services.create', 'services.edit', 'services.delete',
                     'portfolios.view', 'portfolios.create', 'portfolios.edit', 'portfolios.delete',
@@ -122,20 +142,22 @@ class SecuritySeeder extends Seeder
             ],
             'staff' => [
                 'name' => 'Staff',
-                'description' => 'Akses operasional proyek, klien, dan dokumentasi',
+                'description' => 'Akses operasional lead, proyek, klien, dan dokumentasi',
                 'permissions' => [
                     'dashboard.view',
-                    'projects.view', 'projects.edit',
+                    'leads.view', 'leads.create', 'leads.edit',
+                    'projects.view', 'projects.edit', 'projects.kanban', 'projects.tasks', 'projects.documents',
                     'clients.view',
                     'documentations.view', 'documentations.create', 'documentations.edit',
                 ],
             ],
             'finance' => [
                 'name' => 'Finance',
-                'description' => 'Akses khusus invoice, pencatatan transaksi kas, dan penggajian',
+                'description' => 'Akses khusus quotation, invoice, pencatatan transaksi kas, dan penggajian',
                 'permissions' => [
                     'dashboard.view',
                     'clients.view',
+                    'quotations.view', 'quotations.create', 'quotations.edit',
                     'invoices.view', 'invoices.create', 'invoices.edit', 'invoices.delete',
                     'finance.view', 'finance.create', 'finance.edit', 'finance.delete',
                     'salaries.view', 'salaries.create', 'salaries.edit', 'salaries.delete',
@@ -144,10 +166,10 @@ class SecuritySeeder extends Seeder
             ],
             'technician' => [
                 'name' => 'Technician',
-                'description' => 'Akses teknisi proyek dan pengunggahan dokumentasi kerja',
+                'description' => 'Akses teknisi proyek, task, dan pengunggahan dokumentasi kerja',
                 'permissions' => [
                     'dashboard.view',
-                    'projects.view', 'projects.edit',
+                    'projects.view', 'projects.edit', 'projects.kanban', 'projects.tasks', 'projects.documents',
                     'documentations.view', 'documentations.create', 'documentations.edit',
                 ],
             ],

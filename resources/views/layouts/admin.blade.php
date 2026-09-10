@@ -147,13 +147,53 @@
               </a>
             @endif
 
+        <!-- Business & CRM Group -->
+        <div>
+          <div class="px-3 mb-2 text-[11px] font-bold tracking-wider text-[#21C9A4] uppercase">CRM & Bisnis</div>
+          <nav class="space-y-1">
+            
+            @if(Auth::guard('admin')->user()?->hasPermission('leads.view'))
+              <!-- Leads -->
+              <a href="{{ route('admin.leads.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.leads.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-user-tag w-5 mr-3 text-center {{ request()->routeIs('admin.leads.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Leads Prospek</span>
+              </a>
+            @endif
+
             @if(Auth::guard('admin')->user()?->hasPermission('clients.view'))
               <!-- Clients -->
               <a href="{{ route('admin.clients.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.clients.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
                 <i class="fa-solid fa-users-rectangle w-5 mr-3 text-center {{ request()->routeIs('admin.clients.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
-                <span>Klien</span>
+                <span>Klien (Client 360°)</span>
               </a>
             @endif
+
+            @if(Auth::guard('admin')->user()?->hasPermission('quotations.view'))
+              <!-- Quotations -->
+              <a href="{{ route('admin.quotations.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.quotations.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-file-signature w-5 mr-3 text-center {{ request()->routeIs('admin.quotations.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Quotation Penawaran</span>
+              </a>
+            @endif
+
+            @if(Auth::guard('admin')->user()?->hasPermission('projects.view'))
+              <!-- Projects List -->
+              <a href="{{ route('admin.projects.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.projects.index') || request()->routeIs('admin.projects.show') || request()->routeIs('admin.projects.create') || request()->routeIs('admin.projects.edit') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-diagram-project w-5 mr-3 text-center {{ request()->routeIs('admin.projects.index') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Daftar Proyek</span>
+              </a>
+            @endif
+
+            @if(Auth::guard('admin')->user()?->hasPermission('projects.kanban'))
+              <!-- Projects Kanban -->
+              <a href="{{ route('admin.projects.kanban') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.projects.kanban') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+                <i class="fa-solid fa-[#14433B] fa-table-columns w-5 mr-3 text-center {{ request()->routeIs('admin.projects.kanban') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+                <span>Kanban Proyek</span>
+              </a>
+            @endif
+
+          </nav>
+        </div>
 
             @if(Auth::guard('admin')->user()?->hasPermission('documentations.view'))
               <!-- Documentations -->
@@ -300,6 +340,13 @@
         <!-- Right Action Controls -->
         <div class="flex items-center space-x-3">
           
+          <!-- Global Search Trigger Button -->
+          <button onclick="openGlobalSearch()" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-medium transition-colors border border-slate-200">
+            <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+            <span class="hidden sm:inline">Cari Bisnis...</span>
+            <kbd class="px-1.5 py-0.5 bg-white rounded border border-slate-300 text-[10px] font-bold text-slate-500 shadow-2xs">Ctrl K</kbd>
+          </button>
+
           <!-- System Status Badge -->
           <div class="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-100/70 border border-emerald-300/80 text-emerald-900 text-xs font-semibold">
             <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
@@ -484,6 +531,9 @@
       }, 5000);
     });
   </script>
+
+  <!-- Global Search Modal Include -->
+  @include('admin.partials.global_search_modal')
 
   @stack('scripts')
 </body>

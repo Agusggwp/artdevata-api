@@ -23,6 +23,11 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\LoginHistoryController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\AccountSecurityController;
+use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\Admin\QuotationController;
+use App\Http\Controllers\Admin\ProjectTaskController;
+use App\Http\Controllers\Admin\ProjectDocumentController;
+use App\Http\Controllers\Admin\GlobalSearchController;
 use App\Http\Controllers\Api\DocumentationController as ApiDocumentationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -43,12 +48,42 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Protected Admin Routes
     Route::middleware('auth:admin')->group(function () {
         Route::get('/panel', [PanelController::class, 'index'])->name('panel');
+        Route::get('/admin/panel', [PanelController::class, 'index'])->name('panel.alias');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+
+        // Global Search API (Ctrl + K)
+        Route::get('/global-search', [GlobalSearchController::class, 'search'])->name('global-search');
 
         // My Account Security (Accessible by all logged in admins)
         Route::get('/account/security', [AccountSecurityController::class, 'show'])->name('account.security');
         Route::put('/account/security/password', [AccountSecurityController::class, 'updatePassword'])->name('account.security.update-password');
         Route::post('/account/security/logout-others', [AccountSecurityController::class, 'logoutOtherSessions'])->name('account.security.logout-others');
+
+        // CRM / Leads Management
+        Route::middleware('permission:leads.view')->group(function () {
+            Route::post('/leads/{lead}/convert', [LeadController::class, 'convert'])->name('leads.convert');
+            Route::resource('leads', LeadController::class);
+        });
+
+        // Quotations Management
+        Route::middleware('permission:quotations.view')->group(function () {
+            Route::get('/quotations/{quotation}/pdf', [QuotationController::class, 'pdf'])->name('quotations.pdf');
+            Route::get('/quotations/{quotation}/create-project', [QuotationController::class, 'createProject'])->name('quotations.create-project');
+            Route::resource('quotations', QuotationController::class);
+        });
+
+        // Projects Management 2.0
+        Route::middleware('permission:projects.view')->group(function () {
+            Route::get('/projects/kanban', [ProjectController::class, 'kanban'])->name('projects.kanban');
+            Route::post('/projects/{project}/update-status', [ProjectController::class, 'updateStatus'])->name('projects.update-status');
+            Route::post('/projects/{project}/tasks', [ProjectTaskController::class, 'store'])->name('projects.tasks.store');
+            Route::put('/tasks/{task}', [ProjectTaskController::class, 'update'])->name('projects.tasks.update');
+            Route::delete('/tasks/{task}', [ProjectTaskController::class, 'destroy'])->name('projects.tasks.destroy');
+            Route::post('/projects/{project}/documents', [ProjectDocumentController::class, 'store'])->name('projects.documents.store');
+            Route::get('/documents/{document}/download', [ProjectDocumentController::class, 'download'])->name('projects.documents.download');
+            Route::delete('/documents/{document}', [ProjectDocumentController::class, 'destroy'])->name('projects.documents.destroy');
+            Route::resource('projects', ProjectController::class);
+        });
 
         // Services
         Route::middleware('permission:services.view')->group(function () {
@@ -64,9 +99,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::middleware('permission:blogs.view')->group(function () {
             Route::resource('blogs', AdminBlogController::class);
         });
-
-        // Chat Admin (opsional)
-        // Route::get('/chat', [AdminChatController::class, 'index'])->name('chat');
 
         // Salary management
         Route::middleware('permission:salaries.view')->group(function () {
@@ -116,9 +148,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/security', [SecurityController::class, 'index'])->name('security.index');
         });
 
-        // Project & Invoice Management
-        Route::get('/admin/panel', [PanelController::class, 'index'])->name('admin.panel');
-        Route::resource('projects', ProjectController::class);
+        // Invoices Management
         Route::resource('invoices', InvoiceController::class);
         Route::patch('/invoices/{invoice}/status', [InvoiceController::class, 'updateStatus'])->name('invoices.updateStatus');
     });

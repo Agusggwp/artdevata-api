@@ -1,136 +1,333 @@
 @extends('layouts.admin')
 
-@section('title', 'Detail Proyek - ' . $project->name)
+@section('title', 'Detail Proyek ' . $project->name)
 
 @section('content')
+<div class="space-y-6">
 
-<div class="max-w-4xl mx-auto space-y-6">
-  
-  <!-- Header Bar -->
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div class="flex items-center space-x-3">
-      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#14433B] to-[#0E5D55] text-[#21C9A4] flex items-center justify-center font-bold text-xl shadow-xs">
-        <i class="fa-solid fa-diagram-project"></i>
+      <div class="w-12 h-12 rounded-2xl bg-[#14433B] text-white flex items-center justify-center font-bold text-lg">
+        <i class="fa-solid fa-diagram-project text-xl"></i>
       </div>
       <div>
-        <h1 class="text-2xl font-black text-slate-900 tracking-tight">{{ $project->name }}</h1>
-        <p class="text-xs text-slate-500">ID Proyek: #PRJ-{{ $project->id }} • Klien: {{ $project->client ?? '-' }}</p>
+        <div class="flex items-center space-x-2">
+          <h1 class="text-xl font-bold text-slate-800">{{ $project->name }}</h1>
+          {!! $project->status_badge !!}
+          {!! $project->priority_badge !!}
+        </div>
+        <p class="text-xs text-slate-500">
+          No. Proyek: <strong class="text-slate-800">{{ $project->project_number ?? '-' }}</strong> • Klien: <span class="font-bold text-slate-800">{{ $project->client?->name ?? $project->client ?? 'Perorangan' }}</span>
+        </p>
       </div>
     </div>
 
     <div class="flex items-center space-x-2">
-      <a href="{{ route('admin.projects.edit', $project) }}" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-xs transition-colors flex items-center space-x-2">
-        <i class="fa-solid fa-pen-to-square text-xs"></i>
-        <span>Edit Proyek</span>
-      </a>
-      <a href="{{ route('admin.projects.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors flex items-center space-x-2">
-        <i class="fa-solid fa-arrow-left text-xs"></i>
-        <span>Kembali</span>
+      @if($project->quotation_id)
+        <a href="{{ route('admin.quotations.show', $project->quotation_id) }}" class="px-4 py-2.5 rounded-xl bg-amber-100 text-amber-900 hover:bg-amber-200 text-xs font-semibold transition-colors flex items-center space-x-1.5">
+          <i class="fa-solid fa-file-signature"></i>
+          <span>Lihat Quotation</span>
+        </a>
+      @endif
+
+      @if(Auth::guard('admin')->user()?->hasPermission('projects.edit'))
+        <a href="{{ route('admin.projects.edit', $project->id) }}" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors">
+          <i class="fa-solid fa-pen-to-square mr-1"></i> Edit Proyek
+        </a>
+      @endif
+
+      <a href="{{ route('admin.projects.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors">
+        Kembali
       </a>
     </div>
   </div>
 
-  <!-- Key Metrics & Overview Grid -->
-  <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-100">
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-      
-      <!-- Status -->
+  <!-- Progress Bar & Key Stats -->
+  <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-100 space-y-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
       <div class="space-y-1">
-        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Status Pengerjaan</span>
+        <span class="text-slate-500 font-bold uppercase tracking-wider text-[10px]">Penyelesaian Proyek</span>
+        <div class="text-2xl font-black text-[#14433B]">{{ $project->progress }}%</div>
+      </div>
+      <div class="flex items-center space-x-6 text-xs text-slate-600">
         <div>
-          @if($project->status === 'completed')
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Selesai
-            </span>
-          @elseif($project->status === 'ongoing')
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></span> Sedang Berjalan
-            </span>
-          @else
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/60">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> Tertunda
-            </span>
+          <span class="text-slate-400 text-[11px] block">Budget Proyek</span>
+          <span class="font-extrabold text-slate-800">Rp {{ number_format($project->budget, 0, ',', '.') }}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 text-[11px] block">Deadline</span>
+          <span class="font-bold text-amber-600">{{ $project->deadline ? $project->deadline->format('d M Y') : '-' }}</span>
+        </div>
+        <div>
+          <span class="text-slate-400 text-[11px] block">Penanggung Jawab</span>
+          <span class="font-bold text-slate-800">{{ $project->assignedStaff?->name ?? 'Belum Ada' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full h-3 rounded-full bg-slate-100 overflow-hidden">
+      <div class="h-full bg-gradient-to-r from-[#14433B] to-[#21C9A4] rounded-full transition-all duration-500" style="width: {{ $project->progress }}%"></div>
+    </div>
+  </div>
+
+  <!-- Tabs / Grid Sections: Tasks, Documents & Timeline -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Left Column: Tasks & Documents -->
+    <div class="lg:col-span-2 space-y-6">
+
+      <!-- Tasks Management Card -->
+      <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-100 space-y-4" x-data="{ showAddTask: false }">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+            <i class="fa-solid fa-[#14433B] fa-list-check text-[#14433B]"></i>
+            <span>Project Tasks ({{ $project->tasks->count() }})</span>
+          </h3>
+          @if(Auth::guard('admin')->user()?->hasPermission('projects.tasks'))
+            <button @click="showAddTask = !showAddTask" class="px-3 py-1.5 rounded-xl bg-[#14433B] hover:bg-[#0B443C] text-white text-xs font-semibold transition-all">
+              <i class="fa-solid fa-plus mr-1"></i> Tambah Task
+            </button>
           @endif
         </div>
-      </div>
 
-      <!-- Budget -->
-      <div class="space-y-1">
-        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Anggaran (Budget)</span>
-        <div class="text-lg font-bold text-slate-900">
-          Rp {{ number_format($project->budget, 0, ',', '.') }}
-        </div>
-      </div>
-
-      <!-- Start Date -->
-      <div class="space-y-1">
-        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Tanggal Mulai</span>
-        <div class="text-xs font-semibold text-slate-800">
-          {{ $project->start_date ? $project->start_date->format('d M Y') : '-' }}
-        </div>
-      </div>
-
-      <!-- End Date -->
-      <div class="space-y-1">
-        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Target Selesai</span>
-        <div class="text-xs font-semibold text-slate-800">
-          {{ $project->end_date ? $project->end_date->format('d M Y') : '-' }}
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Progress Bar -->
-    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 mb-6">
-      <div class="flex items-center justify-between mb-2">
-        <span class="text-xs font-bold text-slate-800">Pencapaian Milestones (Progress)</span>
-        <span class="text-sm font-black text-[#14433B]">{{ $project->progress }}%</span>
-      </div>
-      <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
-        <div class="bg-gradient-to-r from-[#14433B] to-[#21C9A4] h-full rounded-full transition-all duration-300" style="width: {{ $project->progress }}%"></div>
-      </div>
-    </div>
-
-    <!-- Description -->
-    <div class="border-t border-slate-100 pt-6">
-      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Deskripsi & Catatan Proyek</h3>
-      <p class="text-xs text-slate-700 leading-relaxed whitespace-pre-line">{{ $project->description ?? 'Belum ada deskripsi spesifik.' }}</p>
-    </div>
-
-  </div>
-
-  <!-- Team Members Card -->
-  <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-100">
-    <h2 class="text-base font-bold text-slate-900 mb-4">Tim Pengembang (Project Team)</h2>
-    
-    @if($project->team->count() > 0)
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        @foreach($project->team as $member)
-          <div class="flex items-center space-x-3.5 p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-            <div class="w-10 h-10 rounded-full bg-[#14433B] text-[#21C9A4] font-bold text-sm flex items-center justify-center shrink-0">
-              {{ strtoupper(substr($member->name, 0, 1)) }}
+        <!-- Add Task Form -->
+        <div x-show="showAddTask" x-transition class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+          <form method="POST" action="{{ route('admin.projects.tasks.store', $project->id) }}" class="space-y-3">
+            @csrf
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Judul Task *</label>
+                <input type="text" name="title" required placeholder="Judul tugas..." class="w-full text-xs rounded-xl border-slate-200 py-1.5">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Status *</label>
+                <select name="status" required class="w-full text-xs rounded-xl border-slate-200 py-1.5">
+                  <option value="todo">Todo</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="review">Review</option>
+                  <option value="done">Done</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Prioritas *</label>
+                <select name="priority" required class="w-full text-xs rounded-xl border-slate-200 py-1.5">
+                  <option value="low">Low</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="high">High</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Assigned Staff</label>
+                <select name="assigned_to" class="w-full text-xs rounded-xl border-slate-200 py-1.5">
+                  <option value="">-- Staff --</option>
+                  @foreach($admins as $adm)
+                    <option value="{{ $adm->id }}">{{ $adm->name }}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
-            <div class="flex-1 truncate">
-              <span class="font-bold text-slate-900 text-xs block truncate">{{ $member->name }}</span>
-              <span class="text-[10px] text-slate-500 block truncate">{{ $member->email }}</span>
+            <div>
+              <input type="text" name="description" placeholder="Deskripsi tugas singkat..." class="w-full text-xs rounded-xl border-slate-200 py-1.5">
             </div>
-            @if($member->pivot->role)
-              <span class="px-2.5 py-1 rounded-md bg-emerald-50 text-[#14433B] border border-emerald-100 text-[10px] font-semibold shrink-0">
-                {{ $member->pivot->role }}
-              </span>
-            @endif
+            <div class="flex justify-end space-x-2">
+              <button type="button" @click="showAddTask = false" class="px-3 py-1.5 rounded-lg border text-xs font-semibold">Batal</button>
+              <button type="submit" class="px-3 py-1.5 rounded-lg bg-[#14433B] text-white text-xs font-semibold">Simpan Task</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Task List -->
+        <div class="space-y-2">
+          @forelse($project->tasks as $task)
+            <div class="p-3 rounded-xl border border-slate-100 hover:border-slate-200 bg-slate-50/40 flex items-center justify-between text-xs">
+              <div class="flex items-center space-x-3">
+                <form method="POST" action="{{ route('admin.projects.tasks.update', $task->id) }}">
+                  @csrf
+                  @method('PUT')
+                  <input type="hidden" name="title" value="{{ $task->title }}">
+                  <input type="hidden" name="priority" value="{{ $task->priority }}">
+                  <input type="hidden" name="status" value="{{ $task->status === 'done' ? 'todo' : 'done' }}">
+                  <button type="submit" class="w-5 h-5 rounded border flex items-center justify-center transition-colors {{ $task->status === 'done' ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 hover:border-[#14433B]' }}">
+                    @if($task->status === 'done') <i class="fa-solid fa-check text-[10px]"></i> @endif
+                  </button>
+                </form>
+
+                <div>
+                  <span class="font-semibold text-slate-800 {{ $task->status === 'done' ? 'line-through text-slate-400' : '' }}">{{ $task->title }}</span>
+                  <div class="text-[10px] text-slate-400">Assigned: {{ $task->assignee?->name ?? 'Unassigned' }} • {!! $task->priority_badge !!}</div>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {{ $task->status === 'done' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700' }}">
+                  {{ $task->status }}
+                </span>
+                @if(Auth::guard('admin')->user()?->hasPermission('projects.tasks'))
+                  <form method="POST" action="{{ route('admin.projects.tasks.destroy', $task->id) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-rose-500 hover:text-rose-700 p-1"><i class="fa-solid fa-trash-can"></i></button>
+                  </form>
+                @endif
+              </div>
+            </div>
+          @empty
+            <p class="text-xs text-slate-400 py-4 text-center">Belum ada tugas pada proyek ini.</p>
+          @endforelse
+        </div>
+      </div>
+
+      <!-- Documents Management Card -->
+      <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-100 space-y-4" x-data="{ showUpload: false }">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 class="text-sm font-bold text-slate-800 flex items-center space-x-2">
+            <i class="fa-solid fa-folder-open text-[#14433B]"></i>
+            <span>Dokumen & Deliverables Proyek ({{ $project->documents->count() }})</span>
+          </h3>
+          @if(Auth::guard('admin')->user()?->hasPermission('projects.documents'))
+            <button @click="showUpload = !showUpload" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors">
+              <i class="fa-solid fa-upload mr-1"></i> Unggah Dokumen
+            </button>
+          @endif
+        </div>
+
+        <!-- Upload Document Form -->
+        <div x-show="showUpload" x-transition class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+          <form method="POST" action="{{ route('admin.projects.documents.store', $project->id) }}" enctype="multipart/form-data" class="space-y-3">
+            @csrf
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Judul Dokumen *</label>
+                <input type="text" name="title" required placeholder="Kontrak / Desain UI / Dokumentasi..." class="w-full text-xs rounded-xl border-slate-200 py-1.5">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Kategori *</label>
+                <select name="category" required class="w-full text-xs rounded-xl border-slate-200 py-1.5">
+                  <option value="contract">Contract</option>
+                  <option value="quotation">Quotation</option>
+                  <option value="invoice">Invoice</option>
+                  <option value="design">Design</option>
+                  <option value="documentation">Documentation</option>
+                  <option value="deliverables">Deliverables</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Pilih File Dokumen * (Max 20MB, No Executables)</label>
+              <input type="file" name="document" required class="w-full text-xs rounded-xl border-slate-200 py-1.5 bg-white">
+            </div>
+            <div class="flex justify-end space-x-2">
+              <button type="button" @click="showUpload = false" class="px-3 py-1.5 rounded-lg border text-xs font-semibold">Batal</button>
+              <button type="submit" class="px-3 py-1.5 rounded-lg bg-[#14433B] text-white text-xs font-semibold">Unggah File</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Documents Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-[11px] font-bold text-slate-400 uppercase border-b border-slate-100">
+                <th class="pb-2">Judul Dokumen</th>
+                <th class="pb-2">Kategori</th>
+                <th class="pb-2">File</th>
+                <th class="pb-2 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              @forelse($project->documents as $doc)
+                <tr class="hover:bg-slate-50">
+                  <td class="py-2.5 font-bold text-slate-900">{{ $doc->title }}</td>
+                  <td class="py-2.5">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 uppercase text-slate-700">{{ $doc->category }}</span>
+                  </td>
+                  <td class="py-2.5 text-slate-500">{{ $doc->file_name }} ({{ round($doc->file_size / 1024, 1) }} KB)</td>
+                  <td class="py-2.5 text-right space-x-1">
+                    <a href="{{ route('admin.projects.documents.download', $doc->id) }}" class="p-1 text-sky-600 hover:text-sky-800" title="Download"><i class="fa-solid fa-download"></i></a>
+                    @if(Auth::guard('admin')->user()?->hasPermission('projects.documents'))
+                      <form method="POST" action="{{ route('admin.projects.documents.destroy', $doc->id) }}" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="p-1 text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash-can"></i></button>
+                      </form>
+                    @endif
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="4" class="py-4 text-center text-slate-400">Belum ada dokumen yang diunggah.</td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Project Details & Timeline -->
+    <div class="space-y-6">
+
+      <!-- Details Card -->
+      <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-100 space-y-4">
+        <h3 class="text-sm font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center space-x-2">
+          <i class="fa-solid fa-circle-info text-[#14433B]"></i>
+          <span>Detail Proyek</span>
+        </h3>
+
+        <div class="space-y-3 text-xs">
+          <div>
+            <span class="text-slate-400 block text-[11px]">Tanggal Mulai</span>
+            <span class="font-semibold text-slate-800">{{ $project->start_date ? $project->start_date->format('d M Y') : '-' }}</span>
           </div>
-        @endforeach
+          <div>
+            <span class="text-slate-400 block text-[11px]">Tanggal Selesai / Deadline</span>
+            <span class="font-semibold text-slate-800">{{ $project->deadline ? $project->deadline->format('d M Y') : ($project->end_date ? $project->end_date->format('d M Y') : '-') }}</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[11px]">Tim Pengembang</span>
+            <div class="flex flex-wrap gap-1 mt-1">
+              @forelse($project->team as $member)
+                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-semibold text-[10px]">
+                  {{ $member->name }} ({{ $member->pivot->role ?? 'Member' }})
+                </span>
+              @empty
+                <span class="text-slate-400">Belum ada tim.</span>
+              @endforelse
+            </div>
+          </div>
+          <div>
+            <span class="text-slate-400 block text-[11px]">Deskripsi Proyek</span>
+            <div class="p-3 rounded-xl bg-slate-50 text-slate-700 whitespace-pre-line mt-1">{{ $project->description ?? 'Tidak ada deskripsi.' }}</div>
+          </div>
+        </div>
       </div>
-    @else
-      <div class="py-8 text-center text-slate-400">
-        <i class="fa-solid fa-users text-3xl mb-2 text-slate-300"></i>
-        <p class="text-xs">Belum ada anggota tim yang ditugaskan untuk proyek ini.</p>
+
+      <!-- Activity Logs -->
+      <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-100 space-y-4">
+        <h3 class="text-sm font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center space-x-2">
+          <i class="fa-solid fa-clock-rotate-left text-[#14433B]"></i>
+          <span>Timeline Aktivitas</span>
+        </h3>
+
+        <div class="space-y-3 text-xs">
+          @forelse($activityLogs as $log)
+            <div class="border-l-2 border-[#14433B] pl-3 py-1">
+              <div class="font-semibold text-slate-800">{{ $log->description }}</div>
+              <div class="text-[10px] text-slate-400">{{ $log->created_at->format('d M Y, H:i') }} • {{ $log->user_name ?? 'System' }}</div>
+            </div>
+          @empty
+            <p class="text-xs text-slate-400">Belum ada catatan aktivitas proyek.</p>
+          @endforelse
+        </div>
       </div>
-    @endif
+
+    </div>
+
   </div>
 
 </div>
-
 @endsection

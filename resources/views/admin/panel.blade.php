@@ -60,6 +60,79 @@
   </div>
 </div>
 
+<!-- Business CRM & Pipeline Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+  
+  <!-- Leads Stat -->
+  <div class="bg-white rounded-2xl p-5 shadow-card border border-slate-300 hover:border-sky-600 transition-all duration-200 group">
+    <div class="flex items-center justify-between">
+      <span class="text-xs font-extrabold text-slate-800">Total Leads Prospek</span>
+      <div class="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center text-base group-hover:scale-110 transition-transform shadow-xs">
+        <i class="fa-solid fa-user-tag"></i>
+      </div>
+    </div>
+    <div class="mt-3 flex items-baseline justify-between">
+      <span class="text-3xl font-black text-slate-900 tracking-tight">{{ $totalLeads ?? 0 }}</span>
+      <span class="text-xs font-extrabold text-sky-950 bg-sky-100 px-2.5 py-1 rounded-lg border border-sky-400 shadow-xs">{{ $newLeads ?? 0 }} Lead Baru</span>
+    </div>
+    <div class="w-full bg-slate-200 h-2.5 rounded-full mt-3 overflow-hidden">
+      <div class="bg-sky-600 h-full rounded-full" style="width: 75%"></div>
+    </div>
+  </div>
+
+  <!-- Conversion Rate Stat -->
+  <div class="bg-white rounded-2xl p-5 shadow-card border border-slate-300 hover:border-emerald-600 transition-all duration-200 group">
+    <div class="flex items-center justify-between">
+      <span class="text-xs font-extrabold text-slate-800">Conversion Rate</span>
+      <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-base group-hover:scale-110 transition-transform shadow-xs">
+        <i class="fa-solid fa-chart-line"></i>
+      </div>
+    </div>
+    <div class="mt-3 flex items-baseline justify-between">
+      <span class="text-3xl font-black text-slate-900 tracking-tight">{{ $conversionRate ?? 0 }}%</span>
+      <span class="text-xs font-extrabold text-emerald-950 bg-emerald-100 px-2.5 py-1 rounded-lg border border-emerald-400 shadow-xs">Lead → Client</span>
+    </div>
+    <div class="w-full bg-slate-200 h-2.5 rounded-full mt-3 overflow-hidden">
+      <div class="bg-emerald-600 h-full rounded-full" style="width: {{ min(100, $conversionRate ?? 0) }}%"></div>
+    </div>
+  </div>
+
+  <!-- Quotations Pending Stat -->
+  <div class="bg-white rounded-2xl p-5 shadow-card border border-slate-300 hover:border-amber-600 transition-all duration-200 group">
+    <div class="flex items-center justify-between">
+      <span class="text-xs font-extrabold text-slate-800">Pending Quotation</span>
+      <div class="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center text-base group-hover:scale-110 transition-transform shadow-xs">
+        <i class="fa-solid fa-file-signature"></i>
+      </div>
+    </div>
+    <div class="mt-3 flex items-baseline justify-between">
+      <span class="text-3xl font-black text-slate-900 tracking-tight">{{ $pendingQuotations ?? 0 }}</span>
+      <span class="text-xs font-extrabold text-amber-950 bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-400 shadow-xs">{{ $acceptedQuotations ?? 0 }} Accepted</span>
+    </div>
+    <div class="w-full bg-slate-200 h-2.5 rounded-full mt-3 overflow-hidden">
+      <div class="bg-amber-600 h-full rounded-full" style="width: 60%"></div>
+    </div>
+  </div>
+
+  <!-- Pipeline Value Stat -->
+  <div class="bg-white rounded-2xl p-5 shadow-card border border-slate-300 hover:border-[#14433B] transition-all duration-200 group">
+    <div class="flex items-center justify-between">
+      <span class="text-xs font-extrabold text-slate-800">Pipeline Value</span>
+      <div class="w-10 h-10 rounded-xl bg-[#14433B] text-[#21C9A4] flex items-center justify-center text-base group-hover:scale-110 transition-transform shadow-xs">
+        <i class="fa-solid fa-funnel-dollar"></i>
+      </div>
+    </div>
+    <div class="mt-3 flex items-baseline justify-between">
+      <span class="text-xl font-black text-slate-900 tracking-tight">Rp {{ number_format($pipelineValue ?? 0, 0, ',', '.') }}</span>
+      <span class="text-[10px] font-extrabold text-emerald-950 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-400">Prospek Aktif</span>
+    </div>
+    <div class="w-full bg-slate-200 h-2.5 rounded-full mt-3 overflow-hidden">
+      <div class="bg-[#14433B] h-full rounded-full w-full"></div>
+    </div>
+  </div>
+
+</div>
+
 <!-- Stat Cards Grid -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
   
