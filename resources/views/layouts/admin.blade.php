@@ -145,6 +145,12 @@
               <span>Klien</span>
             </a>
 
+            <!-- Documentations -->
+            <a href="{{ route('admin.documentations.index') }}" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 {{ request()->routeIs('admin.documentations.*') ? 'nav-item-active' : 'text-slate-200 nav-item-hover' }}">
+              <i class="fa-solid fa-camera-retro w-5 mr-3 text-center {{ request()->routeIs('admin.documentations.*') ? 'text-[#21C9A4]' : 'text-emerald-200/70' }}"></i>
+              <span>Dokumentasi</span>
+            </a>
+
           </nav>
         </div>
 

@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\SalaryController;
 use App\Http\Controllers\Admin\FinanceController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\DocumentationController;
+use App\Http\Controllers\Api\DocumentationController as ApiDocumentationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -58,6 +60,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // User / Admin management
         Route::resource('users', UserController::class);
+
+        // Documentation management
+        Route::resource('documentations', DocumentationController::class);
     });
 });
 
@@ -93,6 +98,10 @@ Route::prefix('api')->group(function () {
 
     // Clients - hanya client aktif dengan logo
     Route::get('/clients', [ApiClientController::class, 'index']);
+
+    // Documentations - dokumentasi perusahaan
+    Route::get('/documentations', [ApiDocumentationController::class, 'index']);
+    Route::get('/documentations/{id}', [ApiDocumentationController::class, 'show']);
 
     // Chat API (opsional)
     // Route::post('/chat/send', [ApiChatController::class, 'send']);

@@ -34,6 +34,9 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         );
+
+        // Dummy Documentation Records
+        $this->call(DocumentationSeeder::class);
     }
 }
 
