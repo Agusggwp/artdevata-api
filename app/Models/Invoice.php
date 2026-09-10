@@ -25,10 +25,10 @@ class Invoice extends Model
     public function getStatusBadgeAttribute()
     {
         return match ($this->status) {
-            'draft' => '<span class="px-2 py-1 text-xs rounded-full bg-gray-200 text-gray-800">Draft</span>',
-            'sent' => '<span class="px-2 py-1 text-xs rounded-full bg-blue-200 text-blue-800">Sent</span>',
-            'paid' => '<span class="px-2 py-1 text-xs rounded-full bg-green-200 text-green-800">Paid</span>',
-            'overdue' => '<span class="px-2 py-1 text-xs rounded-full bg-red-200 text-red-800">Overdue</span>',
+            'draft' => '<span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-slate-200 text-slate-900 border border-slate-300">Draft</span>',
+            'sent' => '<span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-blue-100 text-blue-900 border border-blue-300">Sent</span>',
+            'paid' => '<span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300">Paid</span>',
+            'overdue' => '<span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-100 text-rose-900 border border-rose-300">Overdue</span>',
         };
     }
 }

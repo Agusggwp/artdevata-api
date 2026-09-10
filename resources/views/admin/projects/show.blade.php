@@ -1,130 +1,136 @@
-<!DOCTYPE html>
-<html lang="id" class="h-full scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{{ $project->name }} - ARTDEVATA Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-</head>
-<body class="h-full bg-gray-50 text-gray-800 font-sans">
+@extends('layouts.admin')
 
-  <div class="flex h-screen overflow-hidden">
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <main class="flex-1 overflow-y-auto p-4 lg:p-8">
-        <div class="max-w-4xl mx-auto">
+@section('title', 'Detail Proyek - ' . $project->name)
 
-          <!-- Header -->
-          <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">{{ $project->name }}</h1>
-            <div class="space-x-3">
-              <a href="{{ route('admin.projects.edit', $project) }}" class="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg">
-                <i class="fas fa-edit mr-2"></i> Edit
-              </a>
-              <a href="{{ route('admin.projects.index') }}" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-100">
-                <i class="fas fa-arrow-left mr-2"></i> Kembali
-              </a>
-            </div>
-          </div>
+@section('content')
 
-          <!-- Main Info Card -->
-          <div class="bg-white p-8 rounded-2xl shadow-lg mb-8">
-            <div class="grid grid-cols-2 gap-8 mb-8">
-              <!-- Status -->
-              <div>
-                <p class="text-sm text-gray-500 mb-2">Status</p>
-                {!! $project->status_badge !!}
-              </div>
+<div class="max-w-4xl mx-auto space-y-6">
+  
+  <!-- Header Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="flex items-center space-x-3">
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#14433B] to-[#0E5D55] text-[#21C9A4] flex items-center justify-center font-bold text-xl shadow-xs">
+        <i class="fa-solid fa-diagram-project"></i>
+      </div>
+      <div>
+        <h1 class="text-2xl font-black text-slate-900 tracking-tight">{{ $project->name }}</h1>
+        <p class="text-xs text-slate-500">ID Proyek: #PRJ-{{ $project->id }} • Klien: {{ $project->client ?? '-' }}</p>
+      </div>
+    </div>
 
-              <!-- Klien -->
-              <div>
-                <p class="text-sm text-gray-500 mb-2">Klien</p>
-                <p class="text-lg font-semibold text-gray-800">{{ $project->client ?? '-' }}</p>
-              </div>
-
-              <!-- Tanggal Mulai -->
-              <div>
-                <p class="text-sm text-gray-500 mb-2">Tanggal Mulai</p>
-                <p class="text-lg font-semibold text-gray-800">{{ $project->start_date ? $project->start_date->format('d M Y') : '-' }}</p>
-              </div>
-
-              <!-- Tanggal Selesai -->
-              <div>
-                <p class="text-sm text-gray-500 mb-2">Tanggal Selesai</p>
-                <p class="text-lg font-semibold text-gray-800">{{ $project->end_date ? $project->end_date->format('d M Y') : '-' }}</p>
-              </div>
-
-              <!-- Budget -->
-              <div>
-                <p class="text-sm text-gray-500 mb-2">Budget</p>
-                <p class="text-lg font-semibold text-gray-800">Rp {{ number_format($project->budget, 0, ',', '.') }}</p>
-              </div>
-
-              <!-- Progress -->
-              <div>
-                <p class="text-sm text-gray-500 mb-2">Progress</p>
-                <div class="flex items-center space-x-3">
-                  <div class="flex-1 bg-gray-200 rounded-full h-3">
-                    <div class="bg-blue-600 h-3 rounded-full" style="width: {{ $project->progress }}%"></div>
-                  </div>
-                  <span class="text-lg font-bold text-gray-800">{{ $project->progress }}%</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Deskripsi -->
-            <div class="border-t pt-6">
-              <p class="text-sm text-gray-500 mb-2">Deskripsi</p>
-              <p class="text-gray-700 leading-relaxed">{{ $project->description ?? '-' }}</p>
-            </div>
-          </div>
-
-          <!-- Tim Proyek -->
-          <div class="bg-white p-8 rounded-2xl shadow-lg mb-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Tim Proyek</h2>
-            @if($project->team->count() > 0)
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                @foreach($project->team as $member)
-                  <div class="flex items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <div class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center mr-4">
-                      <i class="fas fa-user text-blue-600 text-lg"></i>
-                    </div>
-                    <div>
-                      <p class="font-semibold text-gray-800">{{ $member->name }}</p>
-                      <p class="text-sm text-gray-500">{{ $member->email }}</p>
-                    </div>
-                  </div>
-                @endforeach
-              </div>
-            @else
-              <p class="text-gray-500 text-center py-8">Belum ada anggota tim</p>
-            @endif
-          </div>
-
-          <!-- Timeline Info -->
-          <div class="bg-white p-8 rounded-2xl shadow-lg">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Informasi Tambahan</h2>
-            <div class="space-y-4">
-              <div class="flex justify-between items-center pb-4 border-b">
-                <span class="text-gray-600">Dibuat Oleh</span>
-                <span class="font-semibold text-gray-800">{{ $project->creator->name ?? 'N/A' }}</span>
-              </div>
-              <div class="flex justify-between items-center pb-4 border-b">
-                <span class="text-gray-600">Tanggal Dibuat</span>
-                <span class="font-semibold text-gray-800">{{ $project->created_at->format('d M Y H:i') }}</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600">Terakhir Diperbarui</span>
-                <span class="font-semibold text-gray-800">{{ $project->updated_at->format('d M Y H:i') }}</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </main>
+    <div class="flex items-center space-x-2">
+      <a href="{{ route('admin.projects.edit', $project) }}" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-xs transition-colors flex items-center space-x-2">
+        <i class="fa-solid fa-pen-to-square text-xs"></i>
+        <span>Edit Proyek</span>
+      </a>
+      <a href="{{ route('admin.projects.index') }}" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors flex items-center space-x-2">
+        <i class="fa-solid fa-arrow-left text-xs"></i>
+        <span>Kembali</span>
+      </a>
     </div>
   </div>
 
-</body>
-</html>
+  <!-- Key Metrics & Overview Grid -->
+  <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-100">
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+      
+      <!-- Status -->
+      <div class="space-y-1">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Status Pengerjaan</span>
+        <div>
+          @if($project->status === 'completed')
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Selesai
+            </span>
+          @elseif($project->status === 'ongoing')
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></span> Sedang Berjalan
+            </span>
+          @else
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/60">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> Tertunda
+            </span>
+          @endif
+        </div>
+      </div>
+
+      <!-- Budget -->
+      <div class="space-y-1">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Anggaran (Budget)</span>
+        <div class="text-lg font-bold text-slate-900">
+          Rp {{ number_format($project->budget, 0, ',', '.') }}
+        </div>
+      </div>
+
+      <!-- Start Date -->
+      <div class="space-y-1">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Tanggal Mulai</span>
+        <div class="text-xs font-semibold text-slate-800">
+          {{ $project->start_date ? $project->start_date->format('d M Y') : '-' }}
+        </div>
+      </div>
+
+      <!-- End Date -->
+      <div class="space-y-1">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Target Selesai</span>
+        <div class="text-xs font-semibold text-slate-800">
+          {{ $project->end_date ? $project->end_date->format('d M Y') : '-' }}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 mb-6">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-bold text-slate-800">Pencapaian Milestones (Progress)</span>
+        <span class="text-sm font-black text-[#14433B]">{{ $project->progress }}%</span>
+      </div>
+      <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+        <div class="bg-gradient-to-r from-[#14433B] to-[#21C9A4] h-full rounded-full transition-all duration-300" style="width: {{ $project->progress }}%"></div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="border-t border-slate-100 pt-6">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Deskripsi & Catatan Proyek</h3>
+      <p class="text-xs text-slate-700 leading-relaxed whitespace-pre-line">{{ $project->description ?? 'Belum ada deskripsi spesifik.' }}</p>
+    </div>
+
+  </div>
+
+  <!-- Team Members Card -->
+  <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-100">
+    <h2 class="text-base font-bold text-slate-900 mb-4">Tim Pengembang (Project Team)</h2>
+    
+    @if($project->team->count() > 0)
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        @foreach($project->team as $member)
+          <div class="flex items-center space-x-3.5 p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+            <div class="w-10 h-10 rounded-full bg-[#14433B] text-[#21C9A4] font-bold text-sm flex items-center justify-center shrink-0">
+              {{ strtoupper(substr($member->name, 0, 1)) }}
+            </div>
+            <div class="flex-1 truncate">
+              <span class="font-bold text-slate-900 text-xs block truncate">{{ $member->name }}</span>
+              <span class="text-[10px] text-slate-500 block truncate">{{ $member->email }}</span>
+            </div>
+            @if($member->pivot->role)
+              <span class="px-2.5 py-1 rounded-md bg-emerald-50 text-[#14433B] border border-emerald-100 text-[10px] font-semibold shrink-0">
+                {{ $member->pivot->role }}
+              </span>
+            @endif
+          </div>
+        @endforeach
+      </div>
+    @else
+      <div class="py-8 text-center text-slate-400">
+        <i class="fa-solid fa-users text-3xl mb-2 text-slate-300"></i>
+        <p class="text-xs">Belum ada anggota tim yang ditugaskan untuk proyek ini.</p>
+      </div>
+    @endif
+  </div>
+
+</div>
+
+@endsection

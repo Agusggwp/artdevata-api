@@ -1,277 +1,132 @@
-<!DOCTYPE html>
-<html lang="id" class="h-full scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kelola Portfolio - AdminPro</title>
+@extends('layouts.admin')
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: '#4361ee',
-            secondary: '#3f37c9',
-            accent: '#4895ef',
-            danger: '#f72585',
-            success: '#4cc9f0',
-          },
-          fontFamily: { sans: ['Inter', 'sans-serif'] }
-        }
-      }
-    }
-  </script>
+@section('title', 'Kelola Portfolio')
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+@section('content')
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<!-- Header Bar -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h1 class="text-xl font-bold text-slate-900">Daftar Portfolio & Project Showcase</h1>
+    <p class="text-xs text-slate-700 font-medium">Kelola portofolio karya & hasil proyek ARTDEVATA</p>
+  </div>
+  
+  <a href="{{ route('admin.portfolios.create') }}" class="px-4 py-2.5 rounded-xl bg-[#14433B] hover:bg-[#0B443C] text-white text-xs font-semibold shadow-md shadow-[#14433B]/20 transition-all duration-200 flex items-center space-x-2 w-fit">
+    <i class="fa-solid fa-plus text-xs"></i>
+    <span>Tambah Portfolio Baru</span>
+  </a>
+</div>
 
-  <style>
-    .sidebar-active { @apply bg-gradient-to-r from-primary to-secondary text-white; }
-    .sidebar-hover:hover { @apply bg-gray-100 dark:bg-gray-700; }
-    .btn { @apply px-4 py-2 rounded-lg font-medium transition-all duration-200; }
-  </style>
-</head>
-<body class="h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans">
-
-  <div class="flex h-screen overflow-hidden">
-
-    <!-- Sidebar -->
-    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-2xl transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
-      <div class="flex items-center justify-between p-6 border-b dark:border-gray-700">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ARTDEVATA</h1>
-        <button id="close-sidebar" class="lg:hidden text-gray-500 hover:text-primary">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-      </div>
-
-      <nav class="mt-6">
-        <a href="{{ route('admin.panel') }}" class="flex items-center px-6 py-3 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
-        </a>
-        <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-box mr-3"></i> Layanan
-        </a>
-        <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 sidebar-active rounded-l-full mr-3">
-          <i class="fas fa-chart-line mr-3"></i> Portfolio
-        </a>
-        <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-cog mr-3"></i> Blog
-        </a>
-      </nav>
-    </div>
-
-    <!-- Overlay -->
-    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
-
-    <!-- MAIN -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-
-      <!-- Header -->
-      <header class="bg-white dark:bg-gray-800 shadow-md">
-        <div class="flex items-center justify-between px-4 py-3 lg:px-8">
-          <div class="flex items-center space-x-4">
-            <button id="open-sidebar" class="lg:hidden text-primary">
-              <i class="fas fa-bars text-xl"></i>
-            </button>
-            <h2 class="text-xl font-semibold">Kelola Portfolio</h2>
-          </div>
-
-          <div class="flex items-center space-x-4">
-            <button id="dark-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-              <i class="fas fa-moon text-lg"></i>
-            </button>
-
-            <div class="flex items-center space-x-3">
-              <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('admin')->user()->name) }}&background=4361ee&color=fff&bold=true"
-                class="w-10 h-10 rounded-full ring-2 ring-primary">
-              <div class="hidden sm:block">
-                <p class="text-sm font-medium">{{ Auth::guard('admin')->user()->name }}</p>
-                <p class="text-xs text-gray-500">{{ Auth::guard('admin')->user()->email }}</p>
+<!-- Table Card -->
+<div class="bg-white rounded-2xl shadow-card border border-slate-200 overflow-hidden">
+  
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="border-b border-slate-200 bg-slate-100/70 text-[11px] uppercase tracking-wider text-slate-700 font-bold">
+          <th class="py-3.5 px-4 sm:px-6">Project Portfolio</th>
+          <th class="py-3.5 px-4 sm:px-6">Kategori</th>
+          <th class="py-3.5 px-4 sm:px-6">Client / Mitra</th>
+          <th class="py-3.5 px-4 sm:px-6">Teknologi</th>
+          <th class="py-3.5 px-4 sm:px-6">Tautan</th>
+          <th class="py-3.5 px-4 sm:px-6 text-right">Aksi</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 text-xs">
+        @forelse($portfolios as $portfolio)
+          <tr class="hover:bg-slate-50 transition-colors">
+            
+            <!-- Title & Main Image -->
+            <td class="py-4 px-4 sm:px-6">
+              <div class="flex items-center space-x-3">
+                @if($portfolio->image)
+                  <img src="{{ Storage::url($portfolio->image) }}" alt="{{ $portfolio->title }}" class="w-14 h-14 object-cover rounded-xl border border-slate-200 shadow-xs shrink-0">
+                @else
+                  <div class="w-14 h-14 rounded-xl bg-[#14433B]/10 text-[#14433B] flex items-center justify-center font-bold text-base shrink-0">
+                    <i class="fa-solid fa-briefcase"></i>
+                  </div>
+                @endif
+                <div>
+                  <span class="font-bold text-slate-900 block text-sm">{{ $portfolio->title }}</span>
+                  <span class="text-[11px] text-slate-700 font-medium line-clamp-1 max-w-xs">{{ $portfolio->description }}</span>
+                </div>
               </div>
-            </div>
+            </td>
 
-            <form method="POST" action="{{ route('admin.logout') }}">
-              @csrf
-              <button class="text-sm text-red-600 hover:underline">Logout</button>
-            </form>
-          </div>
-        </div>
-      </header>
+            <!-- Category -->
+            <td class="py-4 px-4 sm:px-6 whitespace-nowrap">
+              <span class="px-2.5 py-1 bg-emerald-100 text-emerald-950 border border-emerald-300 text-[11px] font-bold rounded-md">
+                {{ $portfolio->category ?? 'Umum' }}
+              </span>
+            </td>
 
-      <!-- CONTENT -->
-      <main class="flex-1 overflow-y-auto p-4 lg:p-8">
+            <!-- Client -->
+            <td class="py-4 px-4 sm:px-6 text-slate-900 font-medium whitespace-nowrap">
+              {{ $portfolio->client ?? '-' }}
+            </td>
 
-        @if(session('success'))
-          <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
-            {{ session('success') }}
-          </div>
-        @endif
-
-        <div class="mb-6">
-          <a href="{{ route('admin.portfolios.create') }}" class="btn bg-gradient-to-r from-primary to-secondary text-white hover:shadow-lg">
-            <i class="fas fa-plus mr-2"></i> Tambah Portfolio
-          </a>
-        </div>
-
-        <!-- TABLE -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-          <div class="p-6 border-b dark:border-gray-700">
-            <h3 class="text-lg font-semibold">Daftar Portfolio</h3>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium">Judul</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium">Kategori</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium">Client</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium">Gambar</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium">Gallery</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium">Tech</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium">Tautan</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium">Aksi</th>
-                </tr>
-              </thead>
-
-              <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                @forelse($portfolios as $portfolio)
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-
-                  <!-- TITLE -->
-                  <td class="px-6 py-4">
-                    <div class="font-medium">{{ $portfolio->title }}</div>
-                    <div class="text-xs text-gray-500">{{ Str::limit($portfolio->description, 40) }}</div>
-                  </td>
-
-                  <!-- CATEGORY -->
-                  <td class="px-6 py-4">
-                    <span class="px-2 py-1 bg-primary/10 text-primary rounded-md text-xs">
-                      {{ $portfolio->category ?? '-' }}
+            <!-- Tech Stack Tags -->
+            <td class="py-4 px-4 sm:px-6 max-w-xs">
+              <div class="flex flex-wrap gap-1">
+                @if(is_array($portfolio->technologies) && count($portfolio->technologies) > 0)
+                  @foreach($portfolio->technologies as $tech)
+                    <span class="px-2 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 text-[10px] font-semibold rounded-md">
+                      {{ $tech }}
                     </span>
-                  </td>
+                  @endforeach
+                @else
+                  <span class="text-slate-500 text-[11px] font-medium">-</span>
+                @endif
+              </div>
+            </td>
 
-                  <!-- CLIENT -->
-                  <td class="px-6 py-4">
-                    {{ $portfolio->client ?? '-' }}
-                  </td>
+            <!-- Link -->
+            <td class="py-4 px-4 sm:px-6 whitespace-nowrap">
+              @if($portfolio->link)
+                <a href="{{ $portfolio->link }}" target="_blank" class="inline-flex items-center space-x-1 text-[#14433B] hover:text-[#0B443C] text-xs font-bold hover:underline">
+                  <span>Buka Link</span>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              @else
+                <span class="text-slate-500 text-[11px] font-medium">-</span>
+              @endif
+            </td>
 
-                  <!-- MAIN IMAGE -->
-                  <td class="px-6 py-4">
-                    @if($portfolio->image)
-                      <img src="{{ Storage::url($portfolio->image) }}" class="w-16 h-16 rounded-lg object-cover shadow">
-                    @else
-                      <span class="text-xs text-gray-400">Kosong</span>
-                    @endif
-                  </td>
+            <!-- Actions -->
+            <td class="py-4 px-4 sm:px-6 text-right whitespace-nowrap">
+              <div class="flex items-center justify-end space-x-2">
+                <a href="{{ route('admin.portfolios.edit', $portfolio) }}" class="p-2 rounded-lg text-slate-700 hover:text-[#14433B] hover:bg-slate-100 transition-colors" title="Edit Portfolio">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <button type="button" onclick="confirmDelete('{{ route('admin.portfolios.destroy', $portfolio) }}', 'Apakah Anda yakin ingin menghapus portfolio \'{{ addslashes($portfolio->title) }}\'?')" class="p-2 rounded-lg text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Hapus Portfolio">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
 
-                  <!-- GALLERY -->
-                  <td class="px-6 py-4">
-                    <div class="flex gap-2">
-                      @if(is_array($portfolio->images))
-                        @foreach(array_slice($portfolio->images, 0, 3) as $img)
-                          <img src="{{ asset('storage/' . $img) }}" class="w-10 h-10 rounded-lg object-cover border shadow">
-                        @endforeach
-                      @else
-                        <span class="text-xs text-gray-400">Tidak ada</span>
-                      @endif
-                    </div>
-                  </td>
-
-                  <!-- TECHNOLOGIES -->
-                  <td class="px-6 py-4">
-                    <div class="flex flex-wrap gap-1">
-                      @if(is_array($portfolio->technologies))
-                        @foreach($portfolio->technologies as $tech)
-                        <span class="px-2 py-1 bg-secondary/10 text-secondary text-xs rounded-md">
-                          {{ $tech }}
-                        </span>
-                        @endforeach
-                      @else
-                        <span class="text-xs text-gray-400">-</span>
-                      @endif
-                    </div>
-                  </td>
-
-                  <!-- LINK -->
-                  <td class="px-6 py-4">
-                    @if($portfolio->link && $portfolio->link !== '#')
-                      <a href="{{ $portfolio->link }}" target="_blank" class="text-primary flex items-center gap-1">
-                        <i class="fas fa-external-link-alt"></i> Buka
-                      </a>
-                    @else
-                      <span class="text-xs text-gray-400">Tidak ada</span>
-                    @endif
-                  </td>
-
-                  <!-- ACTIONS -->
-                  <td class="px-6 py-4 space-x-3">
-                    <a href="{{ route('admin.portfolios.edit', $portfolio) }}" class="text-primary hover:underline">
-                      <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <form action="{{ route('admin.portfolios.destroy', $portfolio) }}" method="POST" class="inline">
-                      @csrf @method('DELETE')
-                      <button onclick="return confirm('Hapus portfolio ini?')" class="text-danger hover:underline">
-                        <i class="fas fa-trash"></i> Hapus
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-
-                @empty
-                <tr>
-                  <td colspan="8" class="px-6 py-8 text-center text-gray-400">Belum ada portfolio.</td>
-                </tr>
-                @endforelse
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </main>
-    </div>
+          </tr>
+        @empty
+          <tr>
+            <td colspan="6" class="py-12 text-center text-slate-500">
+              <div class="flex flex-col items-center justify-center space-y-3">
+                <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-2xl">
+                  <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-slate-800">Belum Ada Portfolio</p>
+                  <p class="text-xs text-slate-600 mt-0.5">Tambahkan hasil pengerjaan proyek untuk dipublikasikan.</p>
+                </div>
+                <a href="{{ route('admin.portfolios.create') }}" class="px-4 py-2 rounded-xl bg-[#14433B] text-white text-xs font-semibold shadow-sm hover:bg-[#0B443C] transition-colors">
+                  + Tambah Portfolio Baru
+                </a>
+              </div>
+            </td>
+          </tr>
+        @endforelse
+      </tbody>
+    </table>
   </div>
 
-  <!-- JS -->
-  <script>
-    const sidebar = document.getElementById('sidebar');
-    const openBtn = document.getElementById('open-sidebar');
-    const closeBtn = document.getElementById('close-sidebar');
-    const overlay = document.getElementById('overlay');
-    const darkToggle = document.getElementById('dark-toggle');
-    const html = document.documentElement;
+</div>
 
-    openBtn?.addEventListener('click', () => {
-      sidebar.classList.remove('-translate-x-full');
-      overlay.classList.remove('hidden');
-    });
-
-    closeBtn?.addEventListener('click', () => {
-      sidebar.classList.add('-translate-x-full');
-      overlay.classList.add('hidden');
-    });
-
-    overlay?.addEventListener('click', () => {
-      sidebar.classList.add('-translate-x-full');
-      overlay.classList.add('hidden');
-    });
-
-    darkToggle?.addEventListener('click', () => {
-      html.classList.toggle('dark');
-      localStorage.setItem('darkMode', html.classList.contains('dark'));
-    });
-
-    if (localStorage.getItem('darkMode') === 'true') {
-      html.classList.add('dark');
-    }
-  </script>
-
-</body>
-</html>
+@endsection

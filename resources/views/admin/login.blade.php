@@ -1,149 +1,162 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full scroll-smooth">
+<html lang="id" class="h-full bg-[#F8FAFC]">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login Admin - AdminPro</title>
+  <title>Login Admin - ARTDEVATA</title>
 
-  <!-- Tailwind CSS -->
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           colors: {
-            primary: '#4361ee',
-            secondary: '#3f37c9',
-            accent: '#4895ef',
-            danger: '#f72585',
-            success: '#4cc9f0',
+            art: {
+              primary: '#14433B',
+              secondary: '#0E5D55',
+              accent: '#21C9A4',
+              dark: '#0B443C',
+              bg: '#F8FAFC',
+            }
           },
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
-          boxShadow: { 'glow': '0 0 20px rgba(67, 97, 238, 0.4)' }
+          fontFamily: { sans: ['Inter', 'sans-serif'] }
         }
       }
     }
   </script>
 
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
-  <style>
-    .glass { 
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .input-focus { @apply focus:ring-2 focus:ring-primary focus:border-transparent outline-none; }
-    .btn-gradient { @apply bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-6 rounded-xl hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300; }
-    .card-hover { @apply hover:shadow-2xl transition-all duration-300; }
-  </style>
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="h-full bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-indigo-900 dark:to-purple-900 flex items-center justify-center p-4 min-h-screen">
+<body class="h-full bg-[#F8FAFC] flex items-center justify-center p-4 min-h-screen relative overflow-hidden font-sans antialiased text-slate-800">
 
-  <!-- Background Pattern -->
-  <div class="absolute inset-0 opacity-10">
-    <div class="absolute inset-0" style="background: url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%234361ee\" fill-opacity=\"0.1\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"></div>
-  </div>
+  <!-- Subtle Decorative Background Orbs -->
+  <div class="absolute -top-24 -left-24 w-96 h-96 bg-[#21C9A4]/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-[#14433B]/10 rounded-full blur-3xl pointer-events-none"></div>
 
   <div class="w-full max-w-md relative z-10">
-    <!-- Login Card -->
-    <div class="glass rounded-3xl p-8 card-hover border border-white/20">
-      
-      <!-- Logo & Title -->
-      <div class="text-center mb-8">
-        <div class="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-          <i class="fas fa-shield-alt text-3xl text-white"></i>
-        </div>
-        <h1 class="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ArtDevata</h1>
-        <p class="text-gray-600 dark:text-gray-300 mt-2 text-sm">Masuk ke Panel Admin Profesional</p>
+
+    <!-- Brand Header -->
+    <div class="text-center mb-6">
+      <div class="w-14 h-14 bg-[#14433B] text-[#21C9A4] font-black text-2xl rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg border border-[#0E5D55]">
+        A
       </div>
+      <h1 class="text-2xl font-black tracking-tight text-slate-900">ARTDEVATA</h1>
+      <p class="text-xs text-slate-700 font-semibold mt-1">Masuk ke Management Control Panel</p>
+    </div>
 
-      <!-- Alert Messages -->
+    <!-- Login SaaS Card -->
+    <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-xl border border-slate-300">
+      
+      <!-- Session Alerts -->
       @if(session('error'))
-        <div class="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 p-4 rounded-xl mb-5 text-sm flex items-center gap-2">
-          <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
-        </div>
-      @endif
-      @if(session('success'))
-        <div class="bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-300 p-4 rounded-xl mb-5 text-sm flex items-center gap-2">
-          <i class="fas fa-check-circle"></i> {{ session('success') }}
+        <div class="bg-rose-50 border border-rose-300 text-rose-900 p-3.5 rounded-xl mb-5 text-xs font-semibold flex items-center gap-2.5">
+          <i class="fa-solid fa-circle-exclamation text-rose-600 text-sm"></i>
+          <span>{{ session('error') }}</span>
         </div>
       @endif
 
-      <!-- Login Form -->
-      <form method="POST" action="{{ route('admin.login') }}" class="space-y-5">
+      @if(session('success'))
+        <div class="bg-emerald-50 border border-emerald-300 text-emerald-900 p-3.5 rounded-xl mb-5 text-xs font-semibold flex items-center gap-2.5">
+          <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+          <span>{{ session('success') }}</span>
+        </div>
+      @endif
+
+      <!-- Form -->
+      <form method="POST" action="{{ route('admin.login') }}" class="space-y-4">
         @csrf
 
-        <!-- Email -->
+        <!-- Email Field -->
         <div>
-          <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-            <i class="fas fa-envelope text-primary"></i> Email
-          </label>
-          <input 
-            type="email" 
-            name="email" 
-            value="{{ old('email') }}"
-            class="w-full px-4 py-3 bg-white/80 dark:bg-gray-700/80 border border-gray-300 dark:border-gray-600 rounded-xl input-focus transition-all duration-200 placeholder-gray-400"
-            placeholder="admin@artdevata.net" 
-            required 
-            autofocus
-          >
+          <label for="email" class="block text-xs font-bold text-slate-800 mb-1.5">Email Administrator</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#14433B] text-xs">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <input 
+              id="email"
+              type="email" 
+              name="email" 
+              value="{{ old('email') }}"
+              class="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-medium placeholder-slate-500 focus:bg-white focus:border-[#14433B] focus:ring-2 focus:ring-[#14433B]/20 outline-hidden transition-all duration-200"
+              placeholder="admin@artdevata.com" 
+              required 
+              autofocus
+            >
+          </div>
           @error('email')
-            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
-              <i class="fas fa-info-circle"></i> {{ $message }}
+            <p class="text-rose-600 text-[11px] font-semibold mt-1 flex items-center gap-1">
+              <i class="fa-solid fa-circle-info"></i> {{ $message }}
             </p>
           @enderror
         </div>
 
-        <!-- Password -->
+        <!-- Password Field -->
         <div>
-          <label class="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
-            <i class="fas fa-lock text-primary"></i> Password
-          </label>
+          <div class="flex items-center justify-between mb-1.5">
+            <label for="password" class="block text-xs font-bold text-slate-800">Password</label>
+          </div>
           <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#14433B] text-xs">
+              <i class="fa-solid fa-lock"></i>
+            </div>
             <input 
+              id="password"
               type="password" 
               name="password" 
-              class="w-full px-4 py-3 pr-12 bg-white/80 dark:bg-gray-700/80 border border-gray-300 dark:border-gray-600 rounded-xl input-focus transition-all duration-200 placeholder-gray-400"
+              class="w-full pl-9 pr-10 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 font-bold placeholder-slate-500 focus:bg-white focus:border-[#14433B] focus:ring-2 focus:ring-[#14433B]/20 outline-hidden transition-all duration-200"
               placeholder="••••••••"
               required
             >
-            <button type="button" onclick="togglePassword(this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary">
-              <i class="fas fa-eye"></i>
+            <button type="button" onclick="togglePassword(this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-[#14433B] focus:outline-hidden p-1">
+              <i class="fa-solid fa-eye text-xs"></i>
             </button>
           </div>
           @error('password')
-            <p class="text-red-500 text-xs mt-1 flex items-center gap-1">
-              <i class="fas fa-info-circle"></i> {{ $message }}
+            <p class="text-rose-600 text-[11px] font-semibold mt-1 flex items-center gap-1">
+              <i class="fa-solid fa-circle-info"></i> {{ $message }}
             </p>
           @enderror
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="w-full btn-gradient text-lg shadow-glow">
-          <i class="fas fa-sign-in-alt mr-2"></i> MASUK KE PANEL
-        </button>
+        <div class="pt-2">
+          <button type="submit" class="w-full bg-[#14433B] hover:bg-[#0B443C] text-white font-extrabold py-3 px-4 rounded-xl text-sm shadow-md shadow-[#14433B]/20 hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 group">
+            <span>Masuk ke Panel</span>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </div>
+
       </form>
 
-      <!-- Register Link -->
-     
+      <!-- Register Link if enabled -->
+      @if (Route::has('admin.register'))
+        <div class="mt-6 pt-4 border-t border-slate-200 text-center">
+          <p class="text-xs text-slate-700 font-medium">Belum punya akun admin? <a href="{{ route('admin.register') }}" class="font-bold text-[#14433B] hover:text-[#0E5D55] underline">Daftar Admin</a></p>
+        </div>
+      @endif
 
-      <!-- Footer -->
-      <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-8">
-        © {{ date('Y') }} <span class="font-bold text-primary">ART DEVATA</span> • All Rights Reserved
-      </p>
     </div>
+
+    <!-- Footer -->
+    <p class="text-center text-[11px] text-slate-600 font-medium mt-6">
+      &copy; {{ date('Y') }} <span class="font-bold text-[#14433B]">ARTDEVATA</span>. All rights reserved.
+    </p>
+
   </div>
 
-  <!-- JavaScript -->
   <script>
-    // Toggle Password Visibility
     function togglePassword(btn) {
-      const input = btn.previousElementSibling;
+      const input = document.getElementById('password');
       const icon = btn.querySelector('i');
       if (input.type === 'password') {
         input.type = 'text';
@@ -153,11 +166,6 @@
         icon.classList.replace('fa-eye-slash', 'fa-eye');
       }
     }
-
-    // Auto-focus email on load
-    window.addEventListener('load', () => {
-      document.querySelector('input[name="email"]').focus();
-    });
   </script>
 </body>
 </html>

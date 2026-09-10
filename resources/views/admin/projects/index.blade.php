@@ -1,151 +1,152 @@
-<!DOCTYPE html>
-<html lang="id" class="h-full scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Daftar Proyek - ARTDEVATA Admin</title>
+@extends('layouts.admin')
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#4361ee',
-            secondary: '#3a0ca3'
-          }
-        }
-      }
-    }
-  </script>
+@section('title', 'Kelola Proyek')
 
-  <!-- Google Fonts: Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+@section('content')
+
+<!-- Header Bar -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h1 class="text-xl font-bold text-slate-900">Daftar Proyek Software & IT</h1>
+    <p class="text-xs text-slate-700 font-medium">Monitoring progres pengerjaan, tim pengembang, dan anggaran proyek</p>
+  </div>
   
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-</head>
-<body class="h-full bg-gray-50 text-gray-800 font-sans">
+  <a href="{{ route('admin.projects.create') }}" class="px-4 py-2.5 rounded-xl bg-[#14433B] hover:bg-[#0B443C] text-white text-xs font-semibold shadow-md shadow-[#14433B]/20 transition-all duration-200 flex items-center space-x-2 w-fit">
+    <i class="fa-solid fa-plus text-xs"></i>
+    <span>Tambah Proyek Baru</span>
+  </a>
+</div>
 
-  <div class="flex h-screen overflow-hidden">
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <main class="flex-1 overflow-y-auto p-4 lg:p-8">
-        <div class="max-w-7xl mx-auto">
+<!-- Table Card -->
+<div class="bg-white rounded-2xl shadow-card border border-slate-200 overflow-hidden">
+  
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="border-b border-slate-200 bg-slate-100/70 text-[11px] uppercase tracking-wider text-slate-700 font-bold">
+          <th class="py-3.5 px-4 sm:px-6">Nama Proyek</th>
+          <th class="py-3.5 px-4 sm:px-6">Klien</th>
+          <th class="py-3.5 px-4 sm:px-6">Status & Progress</th>
+          <th class="py-3.5 px-4 sm:px-6">Tim Pengembang</th>
+          <th class="py-3.5 px-4 sm:px-6">Tanggal & Budget</th>
+          <th class="py-3.5 px-4 sm:px-6 text-right">Aksi</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 text-xs">
+        @forelse($projects as $project)
+          <tr class="hover:bg-slate-50 transition-colors">
+            
+            <!-- Project Name -->
+            <td class="py-4 px-4 sm:px-6">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#14433B] to-[#0E5D55] text-[#21C9A4] flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
+                  <i class="fa-solid fa-diagram-project"></i>
+                </div>
+                <div>
+                  <a href="{{ route('admin.projects.show', $project) }}" class="font-bold text-slate-900 hover:text-[#14433B] text-sm block">
+                    {{ $project->name }}
+                  </a>
+                  <span class="text-[10px] text-slate-600 font-semibold">ID: #PRJ-{{ $project->id }}</span>
+                </div>
+              </div>
+            </td>
 
-          <!-- Header -->
-          <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Daftar Proyek</h1>
-            <div class="flex items-center gap-3">
-              <a href="{{ route('admin.panel') }}" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-sm flex items-center">
-                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
-              </a>
-              <a href="{{ route('admin.projects.create') }}" class="px-6 py-3 bg-primary hover:bg-secondary text-white rounded-lg flex items-center">
-                <i class="fas fa-plus mr-2"></i> Tambah Proyek
-              </a>
-            </div>
-          </div>
+            <!-- Client -->
+            <td class="py-4 px-4 sm:px-6 text-slate-800 font-medium whitespace-nowrap">
+              {{ $project->client ?? '-' }}
+            </td>
 
-          <!-- Success Message -->
-          @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
-              {{ session('success') }}
-            </div>
-          @endif
+            <!-- Status & Progress -->
+            <td class="py-4 px-4 sm:px-6 min-w-[160px]">
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  @if($project->status === 'completed')
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                      Selesai
+                    </span>
+                  @elseif($project->status === 'ongoing')
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-900 border border-blue-300">
+                      Berjalan
+                    </span>
+                  @else
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                      Tertunda
+                    </span>
+                  @endif
+                  <span class="text-[11px] font-extrabold text-slate-900">{{ $project->progress }}%</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div class="bg-[#14433B] h-full rounded-full transition-all duration-300" style="width: {{ $project->progress }}%"></div>
+                </div>
+              </div>
+            </td>
 
-          <!-- Table -->
-          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-            <div class="overflow-x-auto">
-              <table class="w-full">
-                <thead class="bg-primary text-white">
-                  <tr>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Nama Proyek</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Klien</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Status</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Progress</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Tim</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Tanggal Mulai</th>
-                    <th class="px-6 py-4 text-left text-sm font-semibold">Budget</th>
-                    <th class="px-6 py-4 text-center text-sm font-semibold">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @forelse($projects as $project)
-                    <tr class="border-b border-gray-200 hover:bg-gray-50">
-                      <td class="px-6 py-4">
-                        <p class="font-semibold text-gray-800">{{ $project->name }}</p>
-                      </td>
-                      <td class="px-6 py-4 text-sm text-gray-600">{{ $project->client ?? '-' }}</td>
-                      <td class="px-6 py-4">
-                        {!! $project->status_badge !!}
-                      </td>
-                      <td class="px-6 py-4">
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                          <div class="bg-primary h-2 rounded-full" style="width: {{ $project->progress }}%"></div>
-                        </div>
-                        <p class="text-xs text-gray-600 mt-1">{{ $project->progress }}%</p>
-                      </td>
-                      <td class="px-6 py-4">
-                        <div class="flex flex-wrap gap-2">
-                          @forelse($project->team as $member)
-                            <div class="flex flex-col">
-                              <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-semibold">
-                                {{ $member->name }}
-                              </span>
-                              @if($member->pivot->role)
-                                <span class="text-xs text-gray-600 mt-1">{{ $member->pivot->role }}</span>
-                              @endif
-                            </div>
-                          @empty
-                            <span class="text-gray-500 text-sm">-</span>
-                          @endforelse
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 text-sm text-gray-600">
-                        {{ $project->start_date ? $project->start_date->format('d M Y') : '-' }}
-                      </td>
-                      <td class="px-6 py-4 text-sm font-semibold text-gray-800">
-                        Rp {{ number_format($project->budget, 0, ',', '.') }}
-                      </td>
-                      <td class="px-6 py-4 text-center space-x-2">
-                        <a href="{{ route('admin.projects.show', $project) }}" class="text-blue-600 hover:underline">
-                          <i class="fas fa-eye"></i>
-                        </a>
-                        <a href="{{ route('admin.projects.edit', $project) }}" class="text-yellow-600 hover:underline">
-                          <i class="fas fa-edit"></i>
-                        </a>
-                        <form method="POST" action="{{ route('admin.projects.destroy', $project) }}" style="display:inline;" onsubmit="return confirm('Hapus proyek ini?');">
-                          @csrf
-                          @method('DELETE')
-                          <button type="submit" class="text-red-600 hover:underline">
-                            <i class="fas fa-trash"></i>
-                          </button>
-                        </form>
-                      </td>
-                    </tr>
-                  @empty
-                    <tr>
-                      <td colspan="8" class="px-6 py-8 text-center text-gray-500">
-                        <i class="fas fa-folder-open text-4xl mb-4"></i>
-                        <p>Belum ada proyek</p>
-                      </td>
-                    </tr>
-                  @endforelse
-                </tbody>
-              </table>
-            </div>
+            <!-- Team Members -->
+            <td class="py-4 px-4 sm:px-6 max-w-xs">
+              <div class="flex flex-wrap gap-1">
+                @forelse($project->team as $member)
+                  <span class="inline-flex items-center px-2 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 text-[10px] rounded-md font-semibold">
+                    <i class="fa-solid fa-user-gear text-[8px] mr-1 text-[#14433B]"></i>
+                    {{ $member->name }} {{ $member->pivot->role ? '('.$member->pivot->role.')' : '' }}
+                  </span>
+                @empty
+                  <span class="text-slate-500 text-[11px] font-medium">-</span>
+                @endforelse
+              </div>
+            </td>
 
-            <!-- Pagination -->
-            <div class="px-6 py-4 border-t border-gray-200">
-              {{ $projects->links() }}
-            </div>
-          </div>
+            <!-- Start Date & Budget -->
+            <td class="py-4 px-4 sm:px-6 whitespace-nowrap">
+              <div class="flex flex-col">
+                <span class="font-extrabold text-slate-900 text-xs">Rp {{ number_format($project->budget, 0, ',', '.') }}</span>
+                <span class="text-[10px] text-slate-600 font-semibold">Mulai: {{ $project->start_date ? $project->start_date->format('d M Y') : '-' }}</span>
+              </div>
+            </td>
 
-        </div>
-      </main>
-    </div>
+            <!-- Actions -->
+            <td class="py-4 px-4 sm:px-6 text-right whitespace-nowrap">
+              <div class="flex items-center justify-end space-x-2">
+                <a href="{{ route('admin.projects.show', $project) }}" class="p-2 rounded-lg text-slate-700 hover:text-[#14433B] hover:bg-slate-100 transition-colors" title="Detail Proyek">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+                <a href="{{ route('admin.projects.edit', $project) }}" class="p-2 rounded-lg text-slate-700 hover:text-amber-700 hover:bg-amber-50 transition-colors" title="Edit Proyek">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </a>
+                <button type="button" onclick="confirmDelete('{{ route('admin.projects.destroy', $project) }}', 'Apakah Anda yakin ingin menghapus proyek \'{{ addslashes($project->name) }}\'?')" class="p-2 rounded-lg text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Hapus Proyek">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        @empty
+          <tr>
+            <td colspan="6" class="py-12 text-center text-slate-500">
+              <div class="flex flex-col items-center justify-center space-y-3">
+                <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-2xl">
+                  <i class="fa-solid fa-diagram-project"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-slate-800">Belum Ada Proyek</p>
+                  <p class="text-xs text-slate-600 mt-0.5">Buat proyek baru untuk mulai alokasi tim dan anggaran.</p>
+                </div>
+                <a href="{{ route('admin.projects.create') }}" class="px-4 py-2 rounded-xl bg-[#14433B] text-white text-xs font-semibold shadow-sm hover:bg-[#0B443C] transition-colors">
+                  + Tambah Proyek Baru
+                </a>
+              </div>
+            </td>
+          </tr>
+        @endforelse
+      </tbody>
+    </table>
   </div>
 
-</body>
-</html>
+  @if($projects->hasPages())
+    <div class="px-6 py-4 border-t border-slate-100">
+      {{ $projects->links() }}
+    </div>
+  @endif
+
+</div>
+
+@endsection

@@ -1,134 +1,91 @@
-<!DOCTYPE html>
-<html lang="id" class="h-full scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tambah Blog - AdminPro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#4361ee', secondary: '#3f37c9' }}} }
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <style>
-    .sidebar-active { @apply bg-gradient-to-r from-primary to-secondary text-white; }
-    .sidebar-hover:hover { @apply bg-gray-100 dark:bg-gray-700; }
-  </style>
-</head>
-<body class="h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans">
+@extends('layouts.admin')
 
-  <div class="flex h-screen overflow-hidden">
-    <!-- Sidebar (sama seperti index) -->
-   <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-2xl transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
-      <div class="flex items-center justify-between p-6 border-b dark:border-gray-700">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ARTDEVATA</h1>
-        <button id="close-sidebar" class="lg:hidden text-gray-500 hover:text-primary">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-      </div>
-      <nav class="mt-6">
-       <a href="{{ route('admin.panel') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
-        </a>
-      
-        <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-box mr-3"></i> Layanan
-        </a>
-        <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-chart-line mr-3"></i> Portfolio
-        </a>
-        <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-cog mr-3"></i> Blog
-        </a>
-       
-      </nav>
+@section('title', 'Tulis Artikel Blog')
+
+@section('content')
+
+<div class="max-w-4xl mx-auto">
+  
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-bold text-slate-900">Tulis Artikel Baru</h1>
+      <p class="text-xs text-slate-500">Publikasikan wawasan teknologi dan berita seputar ARTDEVATA</p>
     </div>
-
-    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
-
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <header class="bg-white dark:bg-gray-800 shadow-md">
-        <div class="flex items-center justify-between px-4 py-3 lg:px-8">
-          <div class="flex items-center space-x-4">
-            <button id="open-sidebar" class="lg:hidden text-primary"><i class="fas fa-bars text-xl"></i></button>
-            <h2 class="text-xl font-semibold">Tambah Blog</h2>
-          </div>
-          <div class="flex items-center space-x-4">
-            <button id="dark-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-moon text-lg"></i></button>
-            <div class="flex items-center space-x-3">
-              <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('admin')->user()->name) }}&background=4361ee&color=fff" class="w-10 h-10 rounded-full ring-2 ring-primary"/>
-              <div class="hidden sm:block">
-                <p class="text-sm font-medium">{{ Auth::guard('admin')->user()->name }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::guard('admin')->user()->email }}</p>
-              </div>
-            </div>
-            <form method="POST" action="{{ route('admin.logout') }}">@csrf <button class="text-sm text-red-600 hover:underline">Logout</button></form>
-          </div>
-        </div>
-      </header>
-
-      <main class="flex-1 overflow-y-auto p-4 lg:p-8">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg max-w-4xl mx-auto">
-          <h3 class="text-lg font-semibold mb-6">Form Tambah Blog</h3>
-
-          @if($errors->any())
-            <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-4">
-              <ul class="list-disc pl-5">
-                @foreach($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                @endforeach
-              </ul>
-            </div>
-          @endif
-
-          <form method="POST" action="{{ route('admin.blogs.store') }}" enctype="multipart/form-data">
-            @csrf
-            <div class="mb-5">
-              <label class="block text-sm font-medium mb-2">Judul Blog</label>
-              <input type="text" name="title" value="{{ old('title') }}" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700" required>
-            </div>
-            <div class="mb-5">
-              <label class="block text-sm font-medium mb-2">Kategori Blog</label>
-              <input type="text" name="category" value="{{ old('category') }}" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700">
-            </div>
-            <div class="mb-5">
-              <label class="block text-sm font-medium mb-2">Isi Blog</label>
-              <textarea name="content" rows="10" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700" required>{{ old('content') }}</textarea>
-            </div>
-            <div class="mb-6">
-              <label class="block text-sm font-medium mb-2">Gambar Blog</label>
-              <input type="file" name="image" accept="image/*" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-secondary">
-            </div>
-            <div class="flex space-x-3">
-              <button type="submit" class="bg-gradient-to-r from-primary to-secondary text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg">SIMPAN</button>
-              <a href="{{ route('admin.blogs.index') }}" class="bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-lg hover:bg-gray-400">BATAL</a>
-            </div>
-          </form>
-        </div>
-      </main>
-    </div>
+    <a href="{{ route('admin.blogs.index') }}" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors flex items-center space-x-1.5">
+      <i class="fa-solid fa-arrow-left text-xs"></i>
+      <span>Kembali</span>
+    </a>
   </div>
 
-  <script>
-    const sidebar = document.getElementById('sidebar');
-    const openBtn = document.getElementById('open-sidebar');
-    const closeBtn = document.getElementById('close-sidebar');
-    const overlay = document.getElementById('overlay');
-    openBtn?.addEventListener('click', () => { sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); });
-    closeBtn?.addEventListener('click', () => { sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden'); });
-    overlay?.addEventListener('click', () => { sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden'); });
+  <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-card border border-slate-100">
+    <form method="POST" action="{{ route('admin.blogs.store') }}" enctype="multipart/form-data" class="space-y-5">
+      @csrf
 
-    const darkToggle = document.getElementById('dark-toggle');
-    const html = document.documentElement;
-    darkToggle?.addEventListener('click', () => {
-      html.classList.toggle('dark');
-      const isDark = html.classList.contains('dark');
-      darkToggle.innerHTML = isDark ? '<i class="fas fa-sun text-lg"></i>' : '<i class="fas fa-moon text-lg"></i>';
-      localStorage.setItem('darkMode', isDark);
-    });
-    if (localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      html.classList.add('dark'); darkToggle.innerHTML = '<i class="fas fa-sun text-lg"></i>';
-    }
-  </script>
-</body>
-</html>
+      <!-- Judul -->
+      <div>
+        <label for="title" class="block text-xs font-semibold text-slate-700 mb-1.5">Judul Artikel <span class="text-rose-500">*</span></label>
+        <input 
+          id="title"
+          type="text" 
+          name="title" 
+          value="{{ old('title') }}" 
+          placeholder="Contoh: Tren Arsitektur Cloud & SaaS di Tahun 2026"
+          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#21C9A4] focus:ring-2 focus:ring-[#21C9A4]/20 outline-hidden transition-all duration-200"
+          required
+        >
+      </div>
+
+      <!-- Kategori -->
+      <div>
+        <label for="category" class="block text-xs font-semibold text-slate-700 mb-1.5">Kategori Blog</label>
+        <input 
+          id="category"
+          type="text" 
+          name="category" 
+          value="{{ old('category') }}" 
+          placeholder="Contoh: Teknologi, Edukasi, Pengumuman"
+          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#21C9A4] focus:ring-2 focus:ring-[#21C9A4]/20 outline-hidden transition-all duration-200"
+        >
+      </div>
+
+      <!-- Isi Artikel -->
+      <div>
+        <label for="content" class="block text-xs font-semibold text-slate-700 mb-1.5">Isi Artikel Blog <span class="text-rose-500">*</span></label>
+        <textarea 
+          id="content"
+          name="content" 
+          rows="10" 
+          placeholder="Tuliskan isi artikel blog selengkapnya..."
+          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#21C9A4] focus:ring-2 focus:ring-[#21C9A4]/20 outline-hidden transition-all duration-200"
+          required
+        >{{ old('content') }}</textarea>
+      </div>
+
+      <!-- Gambar Blog -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Gambar / Cover Artikel (Maks 2MB)</label>
+        <input 
+          type="file" 
+          name="image" 
+          accept="image/*"
+          class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#14433B] file:text-white hover:file:bg-[#0B443C] file:cursor-pointer border border-slate-200 rounded-xl bg-slate-50 p-1"
+        >
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
+        <a href="{{ route('admin.blogs.index') }}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-colors">
+          Batal
+        </a>
+        <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#14433B] hover:bg-[#0B443C] text-white text-xs font-semibold shadow-md shadow-[#14433B]/20 transition-all flex items-center space-x-2">
+          <i class="fa-solid fa-paper-plane text-xs"></i>
+          <span>Publikasikan Artikel</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+
+@endsection

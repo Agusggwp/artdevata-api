@@ -1,261 +1,100 @@
-<!DOCTYPE html>
-<html lang="id" class="h-full scroll-smooth">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Edit Blog - AdminPro</title>
+@extends('layouts.admin')
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: '#4361ee',
-            secondary: '#3f37c9',
-            accent: '#4895ef',
-            danger: '#f72585',
-            success: '#4cc9f0',
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
+@section('title', 'Edit Artikel Blog')
 
-  <!-- Google Fonts: Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+@section('content')
+
+<div class="max-w-4xl mx-auto">
   
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  
-  <style>
-    .sidebar-active { @apply bg-gradient-to-r from-primary to-secondary text-white; }
-    .sidebar-hover:hover { @apply bg-gray-100 dark:bg-gray-700; }
-    .btn { @apply px-4 py-2 rounded-lg font-medium transition-all duration-200; }
-  </style>
-</head>
-<body class="h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans">
-
-  <div class="flex h-screen overflow-hidden">
-
-    <!-- Sidebar -->
-    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-2xl transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
-      <div class="flex items-center justify-between p-6 border-b dark:border-gray-700">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ARTDEVATA</h1>
-        <button id="close-sidebar" class="lg:hidden text-gray-500 hover:text-primary">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-      </div>
-      <nav class="mt-6">
-       <a href="{{ route('admin.panel') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
-        </a>
-      
-        <a href="{{ route('admin.services.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-box mr-3"></i> Layanan
-        </a>
-        <a href="{{ route('admin.portfolios.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-chart-line mr-3"></i> Portfolio
-        </a>
-        <a href="{{ route('admin.blogs.index') }}" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-300 sidebar-hover rounded-l-full mr-3">
-          <i class="fas fa-cog mr-3"></i> Blog
-        </a>
-       
-      </nav>
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-bold text-slate-900">Edit Artikel Blog</h1>
+      <p class="text-xs text-slate-500">Perbarui konten artikel {{ $blog->title }}</p>
     </div>
-
-
-    <!-- Overlay (mobile) -->
-    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
-
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-
-      <!-- Header -->
-      <header class="bg-white dark:bg-gray-800 shadow-md">
-        <div class="flex items-center justify-between px-4 py-3 lg:px-8">
-          <div class="flex items-center space-x-4">
-            <button id="open-sidebar" class="lg:hidden text-primary">
-              <i class="fas fa-bars text-xl"></i>
-            </button>
-            <h2 class="text-xl font-semibold">Edit Blog</h2>
-          </div>
-          <div class="flex items-center space-x-4">
-            <!-- Dark Mode Toggle -->
-            <button id="dark-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-              <i class="fas fa-moon text-lg"></i>
-            </button>
-            <!-- Notification -->
-            <button class="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-              <i class="fas fa-bell text-lg"></i>
-              <span class="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full"></span>
-            </button>
-            <!-- Profile -->
-            <div class="flex items-center space-x-3">
-              <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::guard('admin')->user()->name) }}&background=4361ee&color=fff&bold=true" alt="Admin" class="w-10 h-10 rounded-full ring-2 ring-primary"/>
-              <div class="hidden sm:block">
-                <p class="text-sm font-medium">{{ Auth::guard('admin')->user()->name }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::guard('admin')->user()->email }}</p>
-              </div>
-            </div>
-            <!-- Logout -->
-            <form method="POST" action="{{ route('admin.logout') }}" class="d-inline">
-              @csrf
-              <button class="text-sm text-red-600 hover:underline">Logout</button>
-            </form>
-          </div>
-        </div>
-      </header>
-
-      <!-- Content -->
-      <main class="flex-1 overflow-y-auto p-4 lg:p-8">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg max-w-4xl mx-auto">
-          <h3 class="text-lg font-semibold mb-6">Form Edit Blog</h3>
-
-          <!-- ERROR VALIDASI -->
-          @if($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center">
-              <i class="fas fa-exclamation-triangle mr-2"></i>
-              <ul class="list-disc pl-5">
-                @foreach($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                @endforeach
-              </ul>
-            </div>
-          @endif
-
-          <!-- FORM -->
-          <form method="POST" action="{{ route('admin.blogs.update', $blog) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-
-            <!-- Judul -->
-            <div class="mb-5">
-              <label class="block text-sm font-medium mb-2">Judul Blog</label>
-              <input 
-                type="text" 
-                name="title" 
-                value="{{ old('title', $blog->title) }}" 
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700" 
-                required
-              >
-            </div>
-
-            <!-- Kategori -->
-            <div class="mb-5">
-              <label class="block text-sm font-medium mb-2">Kategori Blog</label>
-              <input 
-                type="text" 
-                name="category" 
-                value="{{ old('category', $blog->category) }}" 
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700"
-              >
-            </div>
-
-            <!-- Isi -->
-            <div class="mb-5">
-              <label class="block text-sm font-medium mb-2">Isi Blog</label>
-              <textarea 
-                name="content" 
-                rows="10" 
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700" 
-                required
-              >{{ old('content', $blog->content) }}</textarea>
-            </div>
-
-            <!-- Gambar Saat Ini -->
-            <div class="mb-5">
-              <label class="block text-sm font-medium mb-2">Gambar Saat Ini</label>
-              @if($blog->image)
-                <img 
-                  src="{{ Storage::url($blog->image) }}" 
-                  alt="Gambar Blog" 
-                  class="w-48 h-48 object-cover rounded-lg shadow-md mb-3"
-                >
-                <p class="text-xs text-gray-500">Biarkan kosong jika tidak ingin ganti gambar.</p>
-              @else
-                <p class="text-sm text-gray-500 mb-3">Belum ada gambar.</p>
-              @endif
-            </div>
-
-            <!-- Upload Gambar Baru -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium mb-2">Ganti Gambar (Opsional)</label>
-              <input 
-                type="file" 
-                name="image" 
-                accept="image/*" 
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-secondary"
-              >
-            </div>
-
-            <!-- Tombol -->
-            <div class="flex space-x-3">
-              <button 
-                type="submit" 
-                class="bg-gradient-to-r from-primary to-secondary text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg transition-shadow"
-              >
-                UPDATE
-              </button>
-              <a 
-                href="{{ route('admin.blogs.index') }}" 
-                class="bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold py-3 px-6 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors"
-              >
-                BATAL
-              </a>
-            </div>
-          </form>
-        </div>
-      </main>
-    </div>
+    <a href="{{ route('admin.blogs.index') }}" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors flex items-center space-x-1.5">
+      <i class="fa-solid fa-arrow-left text-xs"></i>
+      <span>Kembali</span>
+    </a>
   </div>
 
-  <!-- JavaScript -->
-  <script>
-    // Sidebar Mobile
-    const sidebar = document.getElementById('sidebar');
-    const openBtn = document.getElementById('open-sidebar');
-    const closeBtn = document.getElementById('close-sidebar');
-    const overlay = document.getElementById('overlay');
+  <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-card border border-slate-100">
+    <form method="POST" action="{{ route('admin.blogs.update', $blog) }}" enctype="multipart/form-data" class="space-y-5">
+      @csrf
+      @method('PUT')
 
-    openBtn?.addEventListener('click', () => {
-      sidebar.classList.remove('-translate-x-full');
-      overlay.classList.remove('hidden');
-    });
+      <!-- Judul -->
+      <div>
+        <label for="title" class="block text-xs font-semibold text-slate-700 mb-1.5">Judul Artikel <span class="text-rose-500">*</span></label>
+        <input 
+          id="title"
+          type="text" 
+          name="title" 
+          value="{{ old('title', $blog->title) }}" 
+          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#21C9A4] focus:ring-2 focus:ring-[#21C9A4]/20 outline-hidden transition-all duration-200"
+          required
+        >
+      </div>
 
-    closeBtn?.addEventListener('click', () => {
-      sidebar.classList.add('-translate-x-full');
-      overlay.classList.add('hidden');
-    });
+      <!-- Kategori -->
+      <div>
+        <label for="category" class="block text-xs font-semibold text-slate-700 mb-1.5">Kategori Blog</label>
+        <input 
+          id="category"
+          type="text" 
+          name="category" 
+          value="{{ old('category', $blog->category) }}" 
+          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#21C9A4] focus:ring-2 focus:ring-[#21C9A4]/20 outline-hidden transition-all duration-200"
+        >
+      </div>
 
-    overlay?.addEventListener('click', () => {
-      sidebar.classList.add('-translate-x-full');
-      overlay.classList.add('hidden');
-    });
+      <!-- Isi Artikel -->
+      <div>
+        <label for="content" class="block text-xs font-semibold text-slate-700 mb-1.5">Isi Artikel Blog <span class="text-rose-500">*</span></label>
+        <textarea 
+          id="content"
+          name="content" 
+          rows="10" 
+          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#21C9A4] focus:ring-2 focus:ring-[#21C9A4]/20 outline-hidden transition-all duration-200"
+          required
+        >{{ old('content', $blog->content) }}</textarea>
+      </div>
 
-    // Dark Mode
-    const darkToggle = document.getElementById('dark-toggle');
-    const html = document.documentElement;
+      <!-- Gambar Saat Ini & Upload -->
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Gambar / Cover Artikel</label>
+        
+        @if($blog->image)
+          <div class="flex items-center space-x-4 mb-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+            <img src="{{ Storage::url($blog->image) }}" alt="Preview" class="w-20 h-20 object-cover rounded-lg border border-slate-200 shadow-xs">
+            <div>
+              <span class="text-xs font-semibold text-slate-700 block">Gambar Terpasang</span>
+              <span class="text-[11px] text-slate-400">Unggah berkas baru di bawah jika ingin mengganti cover.</span>
+            </div>
+          </div>
+        @endif
 
-    darkToggle?.addEventListener('click', () => {
-      html.classList.toggle('dark');
-      const isDark = html.classList.contains('dark');
-      darkToggle.innerHTML = isDark ? '<i class="fas fa-sun text-lg"></i>' : '<i class="fas fa-moon text-lg"></i>';
-      localStorage.setItem('darkMode', isDark);
-    });
+        <input 
+          type="file" 
+          name="image" 
+          accept="image/*"
+          class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#14433B] file:text-white hover:file:bg-[#0B443C] file:cursor-pointer border border-slate-200 rounded-xl bg-slate-50 p-1"
+        >
+      </div>
 
-    // Load dark mode preference
-    if (localStorage.getItem('darkMode') === 'true' || 
-        (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      html.classList.add('dark');
-      darkToggle.innerHTML = '<i class="fas fa-sun text-lg"></i>';
-    }
-  </script>
+      <!-- Action Buttons -->
+      <div class="pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
+        <a href="{{ route('admin.blogs.index') }}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-50 transition-colors">
+          Batal
+        </a>
+        <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#14433B] hover:bg-[#0B443C] text-white text-xs font-semibold shadow-md shadow-[#14433B]/20 transition-all flex items-center space-x-2">
+          <i class="fa-solid fa-floppy-disk text-xs"></i>
+          <span>Perbarui Artikel</span>
+        </button>
+      </div>
 
-</body>
-</html>
+    </form>
+  </div>
+
+</div>
+
+@endsection

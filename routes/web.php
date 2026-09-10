@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\SalaryController;
 use App\Http\Controllers\Admin\FinanceController;
 use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -54,6 +55,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Client management
         Route::resource('clients', ClientController::class);
+
+        // User / Admin management
+        Route::resource('users', UserController::class);
     });
 });
 

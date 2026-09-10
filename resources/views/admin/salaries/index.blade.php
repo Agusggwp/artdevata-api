@@ -1,204 +1,230 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Pengelolaan Gaji - ARTDEVATA Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-</head>
-<body class="bg-gray-50 text-gray-800 min-h-screen font-sans p-6">
-  <div class="max-w-6xl mx-auto">
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold">Pengelolaan Gaji</h1>
-      <div class="flex items-center gap-3">
-        <div class="px-4 py-2 bg-white rounded shadow text-sm">Saldo Perusahaan: <strong>Rp {{ number_format($companyBalance ?? 0,0,',','.') }}</strong></div>
-        <a href="{{ route('admin.panel') }}" class="px-4 py-2 border rounded-lg hover:bg-gray-100">
-          <i class="fas fa-arrow-left mr-2"></i> Kembali ke Dashboard
-        </a>
-      </div>
-    </div>
+@extends('layouts.admin')
 
-    <section class="mb-8">
-      <h2 class="font-semibold mb-3">Ringkasan Per Admin</h2>
-      <div class="bg-white p-4 rounded shadow">
-        @if(count($perAdminTotals) === 0)
-          <p class="text-sm text-gray-500">Belum ada data gaji.</p>
-        @else
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="text-left text-xs text-gray-500">
-                <th class="py-2">Admin</th>
-                <th class="py-2">Total Gaji</th>
-                <th class="py-2">Terbayar</th>
-                <th class="py-2">Sisa</th>
-                <th class="py-2">Proyek Selesai</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach($perAdminTotals as $id => $amt)
-                @php
-                  $projectsForAdmin = [];
-                  $projectsStatus = [];
-                  $totalPaidForAdmin = 0;
-                  foreach($perProject as $pp) {
-                    foreach($pp['qa_details'] as $d) {
-                      if($d['id'] == $id) {
-                        $projectsForAdmin[$pp['id']] = $pp['name'];
-                        $key = $pp['id'].'_'.$id;
-                        $paid = ($payments[$key]->status ?? null) === 'paid';
-                        $projectsStatus[$pp['id']] = $paid ? 'paid' : 'unpaid';
-                        if($paid) $totalPaidForAdmin += (float) ($payments[$key]->amount ?? $d['amount']);
-                      }
-                    }
-                    foreach($pp['dev_details'] as $d) {
-                      if($d['id'] == $id) {
-                        $projectsForAdmin[$pp['id']] = $pp['name'];
-                        $key = $pp['id'].'_'.$id;
-                        $paid = ($payments[$key]->status ?? null) === 'paid';
-                        $projectsStatus[$pp['id']] = $paid ? 'paid' : 'unpaid';
-                        if($paid) $totalPaidForAdmin += (float) ($payments[$key]->amount ?? $d['amount']);
-                      }
-                    }
-                  }
-                  $totalDue = $amt;
-                  $totalPaidForAdmin = round($totalPaidForAdmin, 2);
-                  $remaining = round($totalDue - $totalPaidForAdmin, 2);
-                @endphp
+@section('title', 'Pengelolaan Gaji & Payroll')
 
-                <tr class="border-t align-top">
-                  <td class="py-3">
-                    {{ $admins[$id]->name ?? 'User #'.$id }}
-                    @if(count($projectsForAdmin) > 0)
-                      <div class="text-xs text-gray-500 mt-1">
-                        <strong>Proyek:</strong>
-                        @foreach($projectsForAdmin as $pid => $pname)
-                          <span class="inline-block @if(($projectsStatus[$pid] ?? 'unpaid')==='paid') bg-green-100 text-green-800 @else bg-yellow-100 text-yellow-800 @endif px-2 py-0.5 rounded text-xs mr-1">
-                            {{ $pname }}
-                          </span>
-                        @endforeach
-                      </div>
-                    @else
-                      <div class="text-xs text-gray-400 mt-1">Belum menyelesaikan proyek</div>
-                    @endif
-                  </td>
+@section('content')
 
-                  <td class="py-3 font-semibold">Rp {{ number_format($totalDue,0,',','.') }}</td>
-                  <td class="py-3 text-green-700 font-semibold">Rp {{ number_format($totalPaidForAdmin,0,',','.') }}</td>
-                  <td class="py-3 text-red-600 font-semibold">Rp {{ number_format($remaining,0,',','.') }}</td>
-
-                  <td class="py-3 text-sm text-gray-600">
-                    @if(count($projectsForAdmin) > 0)
-                      <ul class="list-inside">
-                        @foreach($projectsForAdmin as $pid => $pname)
-                          <li class="flex items-center justify-between py-1">
-                            <span>{{ $pname }}</span>
-                            @if(($projectsStatus[$pid] ?? 'unpaid') === 'paid')
-                              <span class="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded">Terbayar</span>
-                            @else
-                              <span class="px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded">Belum</span>
-                            @endif
-                          </li>
-                        @endforeach
-                      </ul>
-                    @else
-                      -
-                    @endif
-                  </td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
-        @endif
-      </div>
-    </section>
-
-    <section>
-      <h2 class="font-semibold mb-3">Detail Per Proyek (Selesai)</h2>
-      <div class="space-y-4">
-        @forelse($perProject as $p)
-          <div class="bg-white p-4 rounded shadow">
-            <div class="flex justify-between items-center mb-3">
-              <div>
-                <div class="text-sm text-gray-500">Proyek</div>
-                <div class="font-bold">{{ $p['name'] }}</div>
-                <div class="text-xs text-gray-500">Budget: Rp {{ number_format($p['budget'],0,',','.') }}</div>
-              </div>
-              <div class="text-right">
-                <div class="text-xs text-gray-500">QA (5%):</div>
-                <div class="font-semibold">Rp {{ number_format($p['qa_share'],0,',','.') }}</div>
-                <div class="text-xs text-gray-500 mt-2">Dev (25%):</div>
-                <div class="font-semibold">Rp {{ number_format($p['dev_share'],0,',','.') }}</div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <div class="text-sm font-medium mb-2">QA</div>
-                @if(count($p['qa_details'])>0)
-                  <ul class="space-y-2">
-                    @foreach($p['qa_details'] as $d)
-                      @php $key = $p['id'].'_'.$d['id']; $paid = ($payments[$key]->status ?? null) === 'paid'; @endphp
-                      <li class="flex justify-between items-center">
-                        <span>{{ $d['name'] }} <small class="text-xs text-gray-500">({{ $d['role'] }})</small></span>
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium">Rp {{ number_format($d['amount'],0,',','.') }}</span>
-                          @if($paid)
-                            <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Terbayar</span>
-                          @else
-                            <form method="POST" action="{{ route('admin.salaries.pay') }}">
-                              @csrf
-                              <input type="hidden" name="project_id" value="{{ $p['id'] }}">
-                              <input type="hidden" name="admin_id" value="{{ $d['id'] }}">
-                              <input type="hidden" name="amount" value="{{ $d['amount'] }}">
-                              <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded text-sm">Bayar</button>
-                            </form>
-                          @endif
-                        </div>
-                      </li>
-                    @endforeach
-                  </ul>
-                @else
-                  <div class="text-sm text-gray-500">Belum ada QA.</div>
-                @endif
-              </div>
-
-              <div>
-                <div class="text-sm font-medium mb-2">Developer</div>
-                @if(count($p['dev_details'])>0)
-                  <ul class="space-y-2">
-                    @foreach($p['dev_details'] as $d)
-                      @php $key = $p['id'].'_'.$d['id']; $paid = ($payments[$key]->status ?? null) === 'paid'; @endphp
-                      <li class="flex justify-between items-center">
-                        <span>{{ $d['name'] }} <small class="text-xs text-gray-500">({{ $d['role'] }})</small></span>
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium">Rp {{ number_format($d['amount'],0,',','.') }}</span>
-                          @if($paid)
-                            <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">Terbayar</span>
-                          @else
-                            <form method="POST" action="{{ route('admin.salaries.pay') }}">
-                              @csrf
-                              <input type="hidden" name="project_id" value="{{ $p['id'] }}">
-                              <input type="hidden" name="admin_id" value="{{ $d['id'] }}">
-                              <input type="hidden" name="amount" value="{{ $d['amount'] }}">
-                              <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded text-sm">Bayar</button>
-                            </form>
-                          @endif
-                        </div>
-                      </li>
-                    @endforeach
-                  </ul>
-                @else
-                  <div class="text-sm text-gray-500">Belum ada Developer.</div>
-                @endif
-              </div>
-            </div>
-          </div>
-        @empty
-          <div class="text-sm text-gray-500">Belum ada proyek selesai.</div>
-        @endforelse
-      </div>
-    </section>
+<!-- Header Bar -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h1 class="text-xl font-bold text-slate-900">Pengelolaan Gaji & Fee Tim</h1>
+    <p class="text-xs text-slate-700 font-medium">Hitung & bayar komisi pengembang & QA berdasarkan proyek yang telah selesai</p>
   </div>
-</body>
-</html>
+  
+  <div class="flex items-center space-x-3">
+    <div class="px-4 py-2 rounded-xl bg-amber-100/80 border border-amber-300 text-amber-950 text-xs font-bold">
+      <span>Saldo Perusahaan: </span>
+      <span class="font-black text-amber-900">Rp {{ number_format($companyBalance ?? 0, 0, ',', '.') }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Section 1: Summary Per Admin Card -->
+<div class="bg-white rounded-2xl p-6 shadow-card border border-slate-200 mb-8">
+  <h2 class="text-base font-bold text-slate-900 mb-4">Ringkasan Hak Gaji per Admin / Developer</h2>
+  
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse text-xs">
+      <thead>
+        <tr class="border-b border-slate-200 bg-slate-100/70 text-[11px] uppercase tracking-wider text-slate-700 font-bold">
+          <th class="py-3.5 px-4">Nama Administrator / Tim</th>
+          <th class="py-3.5 px-4">Total Hak Komisi</th>
+          <th class="py-3.5 px-4">Terbayar</th>
+          <th class="py-3.5 px-4">Sisa Hak Gaji</th>
+          <th class="py-3.5 px-4">Status Proyek Selesai</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        @forelse($perAdminTotals as $id => $amt)
+          @php
+            $projectsForAdmin = [];
+            $projectsStatus = [];
+            $totalPaidForAdmin = 0;
+            foreach($perProject as $pp) {
+              foreach($pp['qa_details'] as $d) {
+                if($d['id'] == $id) {
+                  $projectsForAdmin[$pp['id']] = $pp['name'];
+                  $key = $pp['id'].'_'.$id;
+                  $paid = ($payments[$key]->status ?? null) === 'paid';
+                  $projectsStatus[$pp['id']] = $paid ? 'paid' : 'unpaid';
+                  if($paid) $totalPaidForAdmin += (float) ($payments[$key]->amount ?? $d['amount']);
+                }
+              }
+              foreach($pp['dev_details'] as $d) {
+                if($d['id'] == $id) {
+                  $projectsForAdmin[$pp['id']] = $pp['name'];
+                  $key = $pp['id'].'_'.$id;
+                  $paid = ($payments[$key]->status ?? null) === 'paid';
+                  $projectsStatus[$pp['id']] = $paid ? 'paid' : 'unpaid';
+                  if($paid) $totalPaidForAdmin += (float) ($payments[$key]->amount ?? $d['amount']);
+                }
+              }
+            }
+            $totalDue = $amt;
+            $totalPaidForAdmin = round($totalPaidForAdmin, 2);
+            $remaining = round($totalDue - $totalPaidForAdmin, 2);
+          @endphp
+
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="py-4 px-4">
+              <div class="font-bold text-slate-900 text-sm">{{ $admins[$id]->name ?? 'User #'.$id }}</div>
+              <div class="text-[11px] text-slate-600 font-medium">{{ $admins[$id]->email ?? '' }}</div>
+            </td>
+
+            <td class="py-4 px-4 font-black text-slate-900">
+              Rp {{ number_format($totalDue, 0, ',', '.') }}
+            </td>
+
+            <td class="py-4 px-4 font-black text-emerald-700">
+              Rp {{ number_format($totalPaidForAdmin, 0, ',', '.') }}
+            </td>
+
+            <td class="py-4 px-4 font-black {{ $remaining > 0 ? 'text-rose-700' : 'text-slate-600' }}">
+              Rp {{ number_format($remaining, 0, ',', '.') }}
+            </td>
+
+            <td class="py-4 px-4">
+              @if(count($projectsForAdmin) > 0)
+                <div class="flex flex-wrap gap-1">
+                  @foreach($projectsForAdmin as $pid => $pname)
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold {{ ($projectsStatus[$pid] ?? 'unpaid') === 'paid' ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-amber-100 text-amber-900 border border-amber-300' }}">
+                      {{ $pname }} ({{ ($projectsStatus[$pid] ?? 'unpaid') === 'paid' ? 'Lunas' : 'Belum' }})
+                    </span>
+                  @endforeach
+                </div>
+              @else
+                <span class="text-slate-500 italic text-[11px] font-medium">Belum ada komisi proyek</span>
+              @endif
+            </td>
+          </tr>
+        @empty
+          <tr>
+            <td colspan="5" class="py-8 text-center text-slate-500 font-medium">
+              Belum ada data akumulasi gaji admin.
+            </td>
+          </tr>
+        @endforelse
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Section 2: Project Payout Breakdown Cards -->
+<div class="space-y-6">
+  <h2 class="text-base font-bold text-slate-900">Rincian Komisi Per Proyek Selesai</h2>
+
+  @forelse($perProject as $p)
+    <div class="bg-white rounded-2xl p-6 shadow-card border border-slate-200 space-y-6">
+      
+      <!-- Project Summary Row -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-4">
+        <div>
+          <span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Proyek Selesai</span>
+          <h3 class="text-base font-bold text-slate-900">{{ $p['name'] }}</h3>
+          <p class="text-xs text-slate-700 font-medium mt-0.5">Total Budget: <strong class="text-slate-900 font-black">Rp {{ number_format($p['budget'], 0, ',', '.') }}</strong></p>
+        </div>
+
+        <div class="flex items-center space-x-6 text-xs">
+          <div class="p-2.5 rounded-xl bg-purple-100/70 border border-purple-200">
+            <span class="text-[10px] text-purple-900 block font-bold">Alokasi QA (5%)</span>
+            <span class="font-extrabold text-purple-950 text-sm">Rp {{ number_format($p['qa_share'], 0, ',', '.') }}</span>
+          </div>
+          <div class="p-2.5 rounded-xl bg-blue-100/70 border border-blue-200">
+            <span class="text-[10px] text-blue-900 block font-bold">Alokasi Dev (25%)</span>
+            <span class="font-extrabold text-blue-950 text-sm">Rp {{ number_format($p['dev_share'], 0, ',', '.') }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- QA & Dev Members Payout Tables -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        
+        <!-- QA Team Payout -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
+            <i class="fa-solid fa-bug text-purple-700"></i>
+            <span>Tim Quality Assurance (QA)</span>
+          </h4>
+
+          @if(count($p['qa_details']) > 0)
+            <ul class="space-y-2.5">
+              @foreach($p['qa_details'] as $d)
+                @php $key = $p['id'].'_'.$d['id']; $paid = ($payments[$key]->status ?? null) === 'paid'; @endphp
+                <li class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-slate-200">
+                  <div>
+                    <span class="font-bold text-slate-900 block">{{ $d['name'] }}</span>
+                    <span class="text-[10px] text-slate-600 font-semibold">{{ $d['role'] }}</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <span class="font-extrabold text-slate-900">Rp {{ number_format($d['amount'], 0, ',', '.') }}</span>
+                    @if($paid)
+                      <span class="px-2.5 py-1 text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-md">Terbayar</span>
+                    @else
+                      <form method="POST" action="{{ route('admin.salaries.pay') }}" class="inline">
+                        @csrf
+                        <input type="hidden" name="project_id" value="{{ $p['id'] }}">
+                        <input type="hidden" name="admin_id" value="{{ $d['id'] }}">
+                        <input type="hidden" name="amount" value="{{ $d['amount'] }}">
+                        <button type="submit" class="px-3 py-1 bg-[#14433B] hover:bg-[#0B443C] text-white text-[11px] font-bold rounded-lg shadow-xs transition-colors">Bayar</button>
+                      </form>
+                    @endif
+                  </div>
+                </li>
+              @endforeach
+            </ul>
+          @else
+            <p class="text-slate-500 italic text-[11px] font-medium py-2">Tidak ada anggota QA pada proyek ini.</p>
+          @endif
+        </div>
+
+        <!-- Developer Team Payout -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <h4 class="font-bold text-slate-900 mb-3 flex items-center space-x-2">
+            <i class="fa-solid fa-code text-blue-700"></i>
+            <span>Tim Developer</span>
+          </h4>
+
+          @if(count($p['dev_details']) > 0)
+            <ul class="space-y-2.5">
+              @foreach($p['dev_details'] as $d)
+                @php $key = $p['id'].'_'.$d['id']; $paid = ($payments[$key]->status ?? null) === 'paid'; @endphp
+                <li class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-slate-200">
+                  <div>
+                    <span class="font-bold text-slate-900 block">{{ $d['name'] }}</span>
+                    <span class="text-[10px] text-slate-600 font-semibold">{{ $d['role'] }}</span>
+                  </div>
+                  <div class="flex items-center space-x-3">
+                    <span class="font-extrabold text-slate-900">Rp {{ number_format($d['amount'], 0, ',', '.') }}</span>
+                    @if($paid)
+                      <span class="px-2.5 py-1 text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-md">Terbayar</span>
+                    @else
+                      <form method="POST" action="{{ route('admin.salaries.pay') }}" class="inline">
+                        @csrf
+                        <input type="hidden" name="project_id" value="{{ $p['id'] }}">
+                        <input type="hidden" name="admin_id" value="{{ $d['id'] }}">
+                        <input type="hidden" name="amount" value="{{ $d['amount'] }}">
+                        <button type="submit" class="px-3 py-1 bg-[#14433B] hover:bg-[#0B443C] text-white text-[11px] font-bold rounded-lg shadow-xs transition-colors">Bayar</button>
+                      </form>
+                    @endif
+                  </div>
+                </li>
+              @endforeach
+            </ul>
+          @else
+            <p class="text-slate-500 italic text-[11px] font-medium py-2">Tidak ada developer pada proyek ini.</p>
+          @endif
+        </div>
+
+      </div>
+
+    </div>
+  @empty
+    <div class="bg-white rounded-2xl p-12 text-center text-slate-500 shadow-card border border-slate-200">
+      <i class="fa-solid fa-money-check-dollar text-4xl mb-3 text-slate-400"></i>
+      <p class="text-sm font-bold text-slate-800">Belum Ada Proyek Selesai</p>
+      <p class="text-xs text-slate-600 font-medium mt-0.5">Komisi dan gaji otomatis dihitung ketika proyek diubah statusnya menjadi Selesai (Completed).</p>
+    </div>
+  @endforelse
+</div>
+
+@endsection

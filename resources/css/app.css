@@ -1,11 +1,40 @@
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
-
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --color-art-primary: #14433B;
+  --color-art-secondary: #0E5D55;
+  --color-art-accent: #21C9A4;
+  --color-art-dark: #0B443C;
+  --color-art-bg: #F8FAFC;
+  --color-art-card: #FFFFFF;
+  --color-art-text-main: #0F172A;
+  --color-art-text-sub: #64748B;
+  --color-art-border: #E2E8F0;
+  --color-art-success: #16A34A;
+  --color-art-warning: #EAB308;
+  --color-art-danger: #DC2626;
+}
+
+/* Custom Scrollbar for sleek SaaS feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
 }
