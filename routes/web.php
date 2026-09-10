@@ -42,7 +42,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Protected Admin Routes
     Route::middleware('auth:admin')->group(function () {
-        Route::get('/panel', [AdminAuthController::class, 'panel'])->name('panel');
+        Route::get('/panel', [PanelController::class, 'index'])->name('panel');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
         // My Account Security (Accessible by all logged in admins)
