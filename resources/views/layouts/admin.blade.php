@@ -354,11 +354,65 @@
           </div>
 
           <!-- Notification Bell Dropdown Button -->
+          @php
+            $notifList = $activeNotifications ?? collect();
+            $unreadCount = $notifList->count();
+          @endphp
           <div class="relative" x-data="{ open: false }">
             <button @click="open = !open" class="relative p-2 text-slate-600 hover:text-[#14433B] hover:bg-slate-100 rounded-xl transition-colors focus:outline-hidden">
               <i class="fa-regular fa-bell text-lg"></i>
-              <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#14433B]"></span>
+              @if($unreadCount > 0)
+                <span class="absolute top-1 right-1 px-1.5 py-0.5 rounded-full bg-rose-500 text-white text-[9px] font-extrabold flex items-center justify-center min-w-[16px]">
+                  {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                </span>
+              @endif
             </button>
+
+            <!-- Dropdown Container -->
+            <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" class="absolute right-0 mt-2 w-80 md:w-96 bg-white rounded-2xl shadow-dropdown border border-slate-100 z-50 overflow-hidden" style="display: none;">
+              
+              <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <i class="fa-solid fa-bell text-[#14433B]"></i>
+                  <span class="text-xs font-bold text-slate-800">Notifikasi & Reminder</span>
+                  <span class="px-2 py-0.5 rounded-full bg-[#14433B] text-white text-[10px] font-bold">{{ $unreadCount }}</span>
+                </div>
+                @if($unreadCount > 0)
+                  <form method="POST" action="{{ route('admin.notifications.mark-read') }}">
+                    @csrf
+                    <button type="submit" class="text-[10px] text-sky-600 font-semibold hover:underline">Tandai Dibaca</button>
+                  </form>
+                @endif
+              </div>
+
+              <div class="max-h-80 overflow-y-auto divide-y divide-slate-100">
+                @forelse($notifList as $notif)
+                  <a href="{{ $notif['url'] }}" class="p-3 hover:bg-slate-50 flex items-start space-x-3 transition-colors block">
+                    <div class="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 {{ $notif['icon'] }}">
+                      <i class="fa-solid fa-circle-exclamation text-xs"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between gap-1">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">{{ $notif['category'] }}</span>
+                        <span class="text-[10px] text-slate-400 whitespace-nowrap">{{ $notif['time'] }}</span>
+                      </div>
+                      <div class="text-xs font-bold text-slate-800 truncate mt-0.5">{{ $notif['title'] }}</div>
+                      <div class="text-[11px] text-slate-500 truncate">{{ $notif['message'] }}</div>
+                    </div>
+                  </a>
+                @empty
+                  <div class="p-6 text-center text-slate-400">
+                    <i class="fa-regular fa-bell-slash text-2xl mb-1 text-slate-300"></i>
+                    <p class="text-xs">Tidak ada pengingat atau notifikasi aktif saat ini.</p>
+                  </div>
+                @endforelse
+              </div>
+
+              <div class="p-2 bg-slate-50 border-t border-slate-100 text-center">
+                <span class="text-[10px] text-slate-400">Sistem Pengingat Otomatis ARTDEVATA</span>
+              </div>
+
+            </div>
           </div>
 
           <div class="h-6 w-px bg-slate-200"></div>

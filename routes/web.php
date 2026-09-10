@@ -53,6 +53,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Global Search API (Ctrl + K)
         Route::get('/global-search', [GlobalSearchController::class, 'search'])->name('global-search');
+        Route::post('/notifications/mark-read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-read');
 
         // My Account Security (Accessible by all logged in admins)
         Route::get('/account/security', [AccountSecurityController::class, 'show'])->name('account.security');

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Admin\NotificationController;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer('layouts.admin', function ($view) {
+            if (auth('admin')->check()) {
+                $notifications = NotificationController::getActiveNotifications();
+                $view->with('activeNotifications', $notifications);
+            }
+        });
     }
 }
