@@ -107,4 +107,25 @@ class SecurityTest extends TestCase
         $response->assertSessionHas('error', 'Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif.');
         $this->assertDatabaseHas('admins', ['id' => $admin->id]);
     }
+
+    /**
+     * Test invoice routes deny access to staff lacking invoices.view permission.
+     */
+    public function test_invoice_route_authorization_denies_unauthorized_access()
+    {
+        $staffRole = Role::where('slug', 'staff')->first();
+
+        $staffAdmin = Admin::create([
+            'name'     => 'Staff Invoice Test',
+            'email'    => 'staffinvoice@artdevata.com',
+            'password' => Hash::make('password123'),
+            'role_id'  => $staffRole->id,
+            'status'   => 'active',
+        ]);
+
+        $response = $this->actingAs($staffAdmin, 'admin')
+                         ->get(route('admin.invoices.index'));
+
+        $response->assertStatus(403);
+    }
 }

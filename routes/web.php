@@ -150,8 +150,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // Invoices Management
-        Route::resource('invoices', InvoiceController::class);
-        Route::patch('/invoices/{invoice}/status', [InvoiceController::class, 'updateStatus'])->name('invoices.updateStatus');
+        Route::middleware('permission:invoices.view')->group(function () {
+            Route::patch('/invoices/{invoice}/status', [InvoiceController::class, 'updateStatus'])->name('invoices.updateStatus');
+            Route::resource('invoices', InvoiceController::class);
+        });
     });
 });
 

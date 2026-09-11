@@ -80,12 +80,13 @@ class SalaryController extends Controller
             'amount' => 'required|numeric|min:0.01'
         ]);
 
-        // jika sudah ada entry, update status menjadi paid
-        $payment = SalaryPayment::updateOrCreate(
-            ['project_id'=>$request->project_id,'admin_id'=>$request->admin_id],
-            ['amount'=>$request->amount,'status'=>'paid','paid_at'=>now()]
-        );
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
+            $payment = SalaryPayment::updateOrCreate(
+                ['project_id' => $request->project_id, 'admin_id' => $request->admin_id],
+                ['amount' => $request->amount, 'status' => 'paid', 'paid_at' => now()]
+            );
 
-        return redirect()->route('admin.salaries.index')->with('success','Pembayaran tercatat.');
+            return redirect()->route('admin.salaries.index')->with('success', 'Pembayaran tercatat.');
+        });
     }
 }

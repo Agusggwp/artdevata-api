@@ -71,6 +71,14 @@
     ::-webkit-scrollbar-track { background: #0B443C; }
     ::-webkit-scrollbar-thumb { background: #0E5D55; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #21C9A4; }
+
+    @media (min-width: 1024px) {
+      #sidebar.sidebar-hidden {
+        margin-left: -16rem !important;
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
   </style>
 
   @stack('styles')
@@ -80,10 +88,10 @@
   <div class="h-screen flex overflow-hidden bg-[#F8FAFC]">
 
     <!-- Sidebar Backdrop (Mobile) -->
-    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300 opacity-0"></div>
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-150 ease-out opacity-0"></div>
 
     <!-- Sidebar Component -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 h-full bg-[#14433B] text-slate-300 flex flex-col transition-all duration-300 ease-in-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 -translate-x-full shadow-xl shrink-0">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 h-full bg-[#14433B] text-slate-300 flex flex-col transition-all duration-150 ease-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 -translate-x-full shadow-xl shrink-0">
       
       <!-- Brand Logo -->
       <div class="h-16 flex items-center justify-between px-6 border-b border-[#0E5D55]/60">
@@ -542,18 +550,22 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <script>
-    // Toggle Mobile Sidebar
+    // Toggle Sidebar (Desktop Collapse & Mobile Overlay)
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('sidebar-backdrop');
       
-      sidebar.classList.toggle('-translate-x-full');
-      if (backdrop.classList.contains('hidden')) {
-        backdrop.classList.remove('hidden');
-        setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+      if (window.innerWidth >= 1024) {
+        sidebar.classList.toggle('sidebar-hidden');
       } else {
-        backdrop.classList.add('opacity-0');
-        setTimeout(() => backdrop.classList.add('hidden'), 300);
+        sidebar.classList.toggle('-translate-x-full');
+        if (backdrop.classList.contains('hidden')) {
+          backdrop.classList.remove('hidden');
+          setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+        } else {
+          backdrop.classList.add('opacity-0');
+          setTimeout(() => backdrop.classList.add('hidden'), 150);
+        }
       }
     }
 

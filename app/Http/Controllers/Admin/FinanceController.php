@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\SalaryPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class FinanceController extends Controller
 {
@@ -83,21 +84,23 @@ class FinanceController extends Controller
             'description' => 'nullable|string|max:255',
         ]);
 
-        // net saat ini (manual transactions)
-        $netManual = (float) CompanyTransaction::selectRaw(
-            "COALESCE(SUM(CASE WHEN type='credit' THEN amount WHEN type='debit' THEN -amount ELSE 0 END),0) as net"
-        )->value('net');
+        return DB::transaction(function () use ($request) {
+            // net saat ini (manual transactions)
+            $netManual = (float) CompanyTransaction::selectRaw(
+                "COALESCE(SUM(CASE WHEN type='credit' THEN amount WHEN type='debit' THEN -amount ELSE 0 END),0) as net"
+            )->value('net');
 
-        $newBalance = $netManual + ($request->type === 'credit' ? $request->amount : -$request->amount);
+            $newBalance = $netManual + ($request->type === 'credit' ? (float) $request->amount : -(float) $request->amount);
 
-        $tx = CompanyTransaction::create([
-            'admin_id' => Auth::guard('admin')->id(),
-            'type' => $request->type,
-            'amount' => $request->amount,
-            'description' => $request->description,
-            'balance_after' => $newBalance,
-        ]);
+            $tx = CompanyTransaction::create([
+                'admin_id' => Auth::guard('admin')->id(),
+                'type' => $request->type,
+                'amount' => $request->amount,
+                'description' => $request->description,
+                'balance_after' => $newBalance,
+            ]);
 
-        return redirect()->back()->with('success', 'Transaksi berhasil dicatat.');
+            return redirect()->back()->with('success', 'Transaksi berhasil dicatat.');
+        });
     }
 }

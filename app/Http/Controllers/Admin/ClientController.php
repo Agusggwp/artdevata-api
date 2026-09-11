@@ -91,13 +91,14 @@ class ClientController extends Controller
         $totalRevenue = $totalPaid;
 
         // Activity timeline from Audit Logs matching this client or related records
-        $activityLogs = AuditLog::where(function ($query) use ($client) {
+        $projectIds = $client->projects->pluck('id')->map(fn($id) => (string) $id)->toArray();
+
+        $activityLogs = AuditLog::where(function ($query) use ($client, $projectIds) {
             $query->where('module', 'Clients')->where('record_id', (string) $client->id);
-        })
-        ->orWhere(function ($query) use ($client) {
-            $projectIds = $client->projects->pluck('id')->map(fn($id) => (string) $id)->toArray();
             if (!empty($projectIds)) {
-                $query->where('module', 'Projects')->whereIn('record_id', $projectIds);
+                $query->orWhere(function ($q) use ($projectIds) {
+                    $q->where('module', 'Projects')->whereIn('record_id', $projectIds);
+                });
             }
         })
         ->latest()
