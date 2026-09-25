@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Admin Panel') - ARTDEVATA</title>
+  <link rel="icon" type="image/png" href="{{ asset('logo.png') }}"/>
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -96,9 +97,7 @@
       <!-- Brand Logo -->
       <div class="h-16 flex items-center justify-between px-6 border-b border-[#0E5D55]/60">
         <a href="{{ route('admin.panel') }}" class="flex items-center space-x-3 group">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#21C9A4] to-[#0E5D55] flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:scale-105 transition-transform duration-200">
-            A
-          </div>
+          <img src="{{ asset('logo.png') }}" alt="ARTDEVATA Logo" class="w-9 h-9 rounded-xl object-contain shadow-md group-hover:scale-105 transition-transform duration-200">
           <div class="flex flex-col">
             <span class="font-bold text-white tracking-wide text-base leading-tight">ARTDEVATA</span>
             <span class="text-[10px] text-[#21C9A4] tracking-widest font-semibold uppercase">Admin SaaS</span>
